@@ -1,0 +1,176 @@
+{
+  "app": {
+    "name": "GridPulse",
+    "tagline": "Netz-Lagebild aus offiziellen öffentlichen Daten",
+    "skip": "Zum Inhalt springen"
+  },
+  "nav": {
+    "situation": "Lage",
+    "outlook": "Ausblick",
+    "events": "Ereignisse",
+    "history": "Historie",
+    "status": "Status",
+    "kiosk": "Kiosk",
+    "main": "Hauptnavigation"
+  },
+  "common": {
+    "source": "Quelle",
+    "license": "Lizenz",
+    "dataAge": "Datenstand: {age}",
+    "asOf": "Stand {time}",
+    "stale": "Veraltet",
+    "staleHint": "Daten älter als erwartet – Anzeige mit Vorsicht verwenden.",
+    "loading": "Lädt …",
+    "error": "Daten konnten nicht geladen werden.",
+    "retry": "Erneut versuchen",
+    "empty": "Keine Daten verfügbar.",
+    "noValue": "–",
+    "theme": "Farbschema",
+    "themeDark": "Dunkel",
+    "themeLight": "Hell",
+    "language": "Sprache",
+    "unknown": "unbekannt",
+    "lastUpdate": "Aktualisiert {time}"
+  },
+  "metrics": {
+    "generation": {
+      "wind_onshore": "Wind an Land",
+      "wind_offshore": "Wind auf See",
+      "solar": "Photovoltaik",
+      "biomass": "Biomasse",
+      "hydro": "Wasserkraft",
+      "other_renewable": "Sonstige Erneuerbare",
+      "nuclear": "Kernenergie",
+      "lignite": "Braunkohle",
+      "hard_coal": "Steinkohle",
+      "gas": "Erdgas",
+      "oil": "Öl",
+      "pumped_storage": "Pumpspeicher",
+      "other_conventional": "Sonstige Konventionelle"
+    },
+    "consumption": {
+      "pumped_storage": "Pumpspeicher-Verbrauch"
+    },
+    "load": {
+      "actual": "Netzlast",
+      "residual": "Residuallast"
+    },
+    "price": {
+      "day_ahead": "Day-Ahead-Preis"
+    },
+    "grid": {
+      "frequency": "Netzfrequenz"
+    },
+    "flow": {
+      "net_import": "Nettoimport"
+    },
+    "indicator": {
+      "renewable_share": "EE-Anteil",
+      "co2_intensity": "CO₂-Intensität"
+    },
+    "weather": {
+      "temperature_2m": "Temperatur 2 m",
+      "wind_speed_100m": "Windgeschwindigkeit 100 m",
+      "shortwave_radiation": "Globalstrahlung",
+      "cloud_cover": "Bewölkung"
+    }
+  },
+  "situation": {
+    "title": "Lage",
+    "frequency": "Netzfrequenz",
+    "deviation": "Abweichung {value} mHz",
+    "statusGreen": "Normal (±50 mHz)",
+    "statusYellow": "Erhöht (±100 mHz)",
+    "statusRed": "Kritisch (> 100 mHz)",
+    "sparkline": "Verlauf der letzten 60 Minuten",
+    "load": "Netzlast",
+    "residual": "Residuallast",
+    "residualHint": "Last minus Wind minus PV",
+    "share": "EE-Anteil an der Erzeugung",
+    "co2": "CO₂-Intensität der Erzeugung",
+    "price": "Day-Ahead-Preis DE-LU",
+    "negativePrice": "Negativer Preis",
+    "mix": "Erzeugungsmix (24 h)",
+    "mixNow": "Erzeugungsmix aktuell",
+    "flows": "Grenzüberschreitende Flüsse",
+    "flowsHint": "Positiv = Import nach Deutschland, negativ = Export",
+    "netImport": "Nettoimport gesamt",
+    "neighbour": "Nachbarland",
+    "import": "Import",
+    "export": "Export",
+    "tableView": "Tabellenansicht"
+  },
+  "outlook": {
+    "title": "Ausblick",
+    "chart": "Residuallast-Prognose",
+    "horizon": "Horizont: {hours} h",
+    "load": "Last (Prognose)",
+    "wind": "Wind (Prognose)",
+    "solar": "PV (Prognose)",
+    "residual": "Residuallast (berechnet)",
+    "official": "Residuallast (offiziell)",
+    "windows": "Hinweise",
+    "noWindows": "Keine negativen Preise oder Dunkelflaute-Risiken im Prognosezeitraum.",
+    "negative_price": "Negative Preise",
+    "dunkelflaute": "Dunkelflaute-Risiko",
+    "windowText": "{start} bis {end} ({hours} h) – {detail}",
+    "basis": "Grundlage: offizielle Prognosen der Datenquellen. Kein eigenes Modell aktiv."
+  },
+  "events": {
+    "title": "Ereignisse",
+    "time": "Zeit",
+    "severity": "Schweregrad",
+    "rule": "Regel",
+    "message": "Meldung",
+    "value": "Wert",
+    "threshold": "Schwelle",
+    "minSeverity": "Mindest-Schweregrad",
+    "all": "Alle",
+    "info": "Info",
+    "warning": "Warnung",
+    "critical": "Kritisch",
+    "none": "Keine Ereignisse im gewählten Zeitraum.",
+    "testAlert": "Test-Benachrichtigung senden",
+    "testSent": "Test gesendet: {result}",
+    "testFailed": "Test fehlgeschlagen: {error}"
+  },
+  "history": {
+    "title": "Historie",
+    "metric": "Kennzahl",
+    "from": "Von",
+    "to": "Bis",
+    "resolution": "Auflösung",
+    "compare": "Vergleichszeitraum",
+    "compareFrom": "Vergleich von",
+    "compareTo": "Vergleich bis",
+    "show": "Anzeigen",
+    "exportCsv": "CSV exportieren",
+    "exportParquet": "Parquet exportieren",
+    "periodA": "Zeitraum A",
+    "periodB": "Zeitraum B",
+    "mean": "Mittelwert",
+    "hint": "Zeiten in Europe/Berlin; Tageswerte folgen Kalendertagen (23/25 h bei Zeitumstellung)."
+  },
+  "status": {
+    "title": "Datenqualität",
+    "source": "Quelle",
+    "healthy": "OK",
+    "unhealthy": "Gestört",
+    "lastSuccess": "Letzter Erfolg",
+    "latency": "Latenz",
+    "gaps": "Lückenquote",
+    "violations": "Plausibilitätsverstöße",
+    "failures": "Fehlschläge in Folge",
+    "age": "Datenalter",
+    "error": "Letzter Fehler"
+  },
+  "kiosk": {
+    "title": "Kiosk",
+    "refresh": "Automatische Aktualisierung alle {seconds} s"
+  },
+  "footer": {
+    "disclaimer": "GridPulse ist ein rein lesendes, beratendes Werkzeug. Es sendet keine Steuerbefehle, ist nicht mit Leittechnik verbunden und ersetzt keine zertifizierten Leitsysteme.",
+    "sources": "Datenquellen",
+    "code": "Quellcode (Apache-2.0)"
+  }
+}

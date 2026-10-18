@@ -1,0 +1,11 @@
+.next
+node_modules
+coverage
+playwright-report
+test-results
+.lighthouseci
+pnpm-lock.yaml
+public/geo
+tests/e2e/__screenshots__
+next-env.d.ts
+public/maplibre

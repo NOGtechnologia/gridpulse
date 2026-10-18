@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Design tokens (RGB triplets for Tailwind alpha support). Dark is the default theme. */
+:root,
+.dark {
+  --bg: 13 17 23;
+  --panel: 22 27 34;
+  --border: 48 54 61;
+  --fg: 230 237 243;
+  --muted: 160 170 182;
+  --accent: 86 180 233;
+  --ok: 63 185 80;
+  --warn: 240 200 60;
+  --crit: 255 107 107;
+  color-scheme: dark;
+}
+
+.light {
+  --bg: 246 248 250;
+  --panel: 255 255 255;
+  --border: 208 215 222;
+  --fg: 20 24 28;
+  --muted: 80 88 99;
+  --accent: 0 92 158;
+  --ok: 26 127 55;
+  --warn: 145 96 0;
+  --crit: 190 30 45;
+  color-scheme: light;
+}
+
+/* Kiosk: maximum contrast for control-room wall displays. */
+.kiosk {
+  --bg: 0 0 0;
+  --panel: 10 10 10;
+  --border: 90 90 90;
+  --fg: 255 255 255;
+  --muted: 200 200 200;
+  color-scheme: dark;
+}
+
+html,
+body {
+  background: rgb(var(--bg));
+  color: rgb(var(--fg));
+}
+
+:focus-visible {
+  outline: 3px solid rgb(var(--accent));
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
