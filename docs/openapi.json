@@ -1,0 +1,2126 @@
+{
+  "components": {
+    "schemas": {
+      "AlertTestResult": {
+        "additionalProperties": false,
+        "properties": {
+          "results": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Results",
+            "type": "object"
+          }
+        },
+        "required": [
+          "results"
+        ],
+        "title": "AlertTestResult",
+        "type": "object"
+      },
+      "Attribution": {
+        "additionalProperties": false,
+        "properties": {
+          "attribution": {
+            "title": "Attribution",
+            "type": "string"
+          },
+          "license": {
+            "title": "License",
+            "type": "string"
+          },
+          "source": {
+            "description": "Adapter id(s), e.g. 'smard' or 'smard|energy_charts'",
+            "title": "Source",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source",
+          "license",
+          "attribution"
+        ],
+        "title": "Attribution",
+        "type": "object"
+      },
+      "ErrorOut": {
+        "additionalProperties": false,
+        "properties": {
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          }
+        },
+        "required": [
+          "detail"
+        ],
+        "title": "ErrorOut",
+        "type": "object"
+      },
+      "EventCategory": {
+        "enum": [
+          "grid",
+          "forecast",
+          "price",
+          "data_quality",
+          "statistical",
+          "outlook"
+        ],
+        "title": "EventCategory",
+        "type": "string"
+      },
+      "EventOut": {
+        "additionalProperties": false,
+        "properties": {
+          "area": {
+            "title": "Area",
+            "type": "string"
+          },
+          "category": {
+            "title": "Category",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "metric": {
+            "title": "Metric",
+            "type": "string"
+          },
+          "rule_id": {
+            "title": "Rule Id",
+            "type": "string"
+          },
+          "severity": {
+            "title": "Severity",
+            "type": "string"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          },
+          "threshold": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Threshold"
+          },
+          "ts": {
+            "format": "date-time",
+            "title": "Ts",
+            "type": "string"
+          },
+          "unit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unit"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          }
+        },
+        "required": [
+          "id",
+          "ts",
+          "rule_id",
+          "severity",
+          "category",
+          "metric",
+          "area",
+          "value",
+          "threshold",
+          "unit",
+          "source",
+          "message"
+        ],
+        "title": "EventOut",
+        "type": "object"
+      },
+      "EventsResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/EventOut"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          }
+        },
+        "required": [
+          "meta",
+          "data"
+        ],
+        "title": "EventsResponse",
+        "type": "object"
+      },
+      "ExportFormat": {
+        "enum": [
+          "csv",
+          "parquet"
+        ],
+        "title": "ExportFormat",
+        "type": "string"
+      },
+      "FlowOut": {
+        "additionalProperties": false,
+        "properties": {
+          "neighbour": {
+            "title": "Neighbour",
+            "type": "string"
+          },
+          "ts": {
+            "format": "date-time",
+            "title": "Ts",
+            "type": "string"
+          },
+          "value": {
+            "description": "MW, positive = import into DE",
+            "title": "Value",
+            "type": "number"
+          }
+        },
+        "required": [
+          "neighbour",
+          "value",
+          "ts"
+        ],
+        "title": "FlowOut",
+        "type": "object"
+      },
+      "ForecastPoint": {
+        "additionalProperties": false,
+        "properties": {
+          "load": {
+            "title": "Load",
+            "type": "number"
+          },
+          "official_residual_load": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Official Residual Load"
+          },
+          "residual_load": {
+            "title": "Residual Load",
+            "type": "number"
+          },
+          "solar": {
+            "title": "Solar",
+            "type": "number"
+          },
+          "ts": {
+            "format": "date-time",
+            "title": "Ts",
+            "type": "string"
+          },
+          "wind": {
+            "title": "Wind",
+            "type": "number"
+          }
+        },
+        "required": [
+          "ts",
+          "load",
+          "wind",
+          "solar",
+          "residual_load"
+        ],
+        "title": "ForecastPoint",
+        "type": "object"
+      },
+      "ForecastResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          },
+          "points": {
+            "items": {
+              "$ref": "#/components/schemas/ForecastPoint"
+            },
+            "title": "Points",
+            "type": "array"
+          },
+          "unit": {
+            "default": "MW",
+            "title": "Unit",
+            "type": "string"
+          },
+          "windows": {
+            "items": {
+              "$ref": "#/components/schemas/OutlookWindow"
+            },
+            "title": "Windows",
+            "type": "array"
+          }
+        },
+        "required": [
+          "meta",
+          "points",
+          "windows"
+        ],
+        "title": "ForecastResponse",
+        "type": "object"
+      },
+      "FrequencyPoint": {
+        "additionalProperties": false,
+        "properties": {
+          "ts": {
+            "format": "date-time",
+            "title": "Ts",
+            "type": "string"
+          },
+          "value": {
+            "title": "Value",
+            "type": "number"
+          }
+        },
+        "required": [
+          "ts",
+          "value"
+        ],
+        "title": "FrequencyPoint",
+        "type": "object"
+      },
+      "FrequencySummary": {
+        "additionalProperties": false,
+        "properties": {
+          "current": {
+            "$ref": "#/components/schemas/Value"
+          },
+          "deviation_mhz": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deviation Mhz"
+          },
+          "sparkline": {
+            "items": {
+              "$ref": "#/components/schemas/FrequencyPoint"
+            },
+            "title": "Sparkline",
+            "type": "array"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "enum": [
+                  "green",
+                  "yellow",
+                  "red"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          }
+        },
+        "required": [
+          "current",
+          "deviation_mhz",
+          "status",
+          "sparkline"
+        ],
+        "title": "FrequencySummary",
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "Health": {
+        "additionalProperties": false,
+        "properties": {
+          "checks": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "default": {},
+            "title": "Checks",
+            "type": "object"
+          },
+          "status": {
+            "enum": [
+              "ok",
+              "degraded",
+              "fail"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "title": "Health",
+        "type": "object"
+      },
+      "Kind": {
+        "enum": [
+          "actual",
+          "forecast"
+        ],
+        "title": "Kind",
+        "type": "string"
+      },
+      "Meta": {
+        "additionalProperties": false,
+        "properties": {
+          "attribution": {
+            "title": "Attribution",
+            "type": "string"
+          },
+          "count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Count"
+          },
+          "disclaimer": {
+            "default": "GridPulse is an advisory, read-only tool and no substitute for certified control systems.",
+            "title": "Disclaimer",
+            "type": "string"
+          },
+          "generated_at": {
+            "format": "date-time",
+            "title": "Generated At",
+            "type": "string"
+          },
+          "license": {
+            "title": "License",
+            "type": "string"
+          },
+          "next_offset": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Offset"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          },
+          "total": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total"
+          }
+        },
+        "required": [
+          "source",
+          "license",
+          "attribution",
+          "generated_at"
+        ],
+        "title": "Meta",
+        "type": "object"
+      },
+      "MetricId": {
+        "enum": [
+          "generation.wind_onshore",
+          "generation.wind_offshore",
+          "generation.solar",
+          "generation.biomass",
+          "generation.hydro",
+          "generation.other_renewable",
+          "generation.nuclear",
+          "generation.lignite",
+          "generation.hard_coal",
+          "generation.gas",
+          "generation.oil",
+          "generation.pumped_storage",
+          "generation.other_conventional",
+          "consumption.pumped_storage",
+          "load.actual",
+          "load.residual",
+          "price.day_ahead",
+          "grid.frequency",
+          "flow.net_import",
+          "indicator.renewable_share",
+          "indicator.co2_intensity",
+          "weather.temperature_2m",
+          "weather.wind_speed_100m",
+          "weather.shortwave_radiation",
+          "weather.cloud_cover"
+        ],
+        "title": "MetricId",
+        "type": "string"
+      },
+      "MetricOut": {
+        "additionalProperties": false,
+        "properties": {
+          "category": {
+            "title": "Category",
+            "type": "string"
+          },
+          "color": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Color"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "renewable": {
+            "title": "Renewable",
+            "type": "boolean"
+          },
+          "unit": {
+            "title": "Unit",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "unit",
+          "category",
+          "renewable",
+          "color"
+        ],
+        "title": "MetricOut",
+        "type": "object"
+      },
+      "MetricsCatalog": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/MetricOut"
+            },
+            "title": "Data",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "MetricsCatalog",
+        "type": "object"
+      },
+      "ObservationOut": {
+        "additionalProperties": false,
+        "properties": {
+          "area": {
+            "title": "Area",
+            "type": "string"
+          },
+          "kind": {
+            "title": "Kind",
+            "type": "string"
+          },
+          "metric": {
+            "title": "Metric",
+            "type": "string"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          },
+          "ts": {
+            "format": "date-time",
+            "title": "Ts",
+            "type": "string"
+          },
+          "unit": {
+            "title": "Unit",
+            "type": "string"
+          },
+          "value": {
+            "title": "Value",
+            "type": "number"
+          }
+        },
+        "required": [
+          "ts",
+          "metric",
+          "area",
+          "kind",
+          "source",
+          "unit",
+          "value"
+        ],
+        "title": "ObservationOut",
+        "type": "object"
+      },
+      "ObservationsResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/ObservationOut"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          }
+        },
+        "required": [
+          "meta",
+          "data"
+        ],
+        "title": "ObservationsResponse",
+        "type": "object"
+      },
+      "OutlookWindow": {
+        "additionalProperties": false,
+        "properties": {
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          },
+          "end": {
+            "format": "date-time",
+            "title": "End",
+            "type": "string"
+          },
+          "hours": {
+            "title": "Hours",
+            "type": "number"
+          },
+          "kind": {
+            "enum": [
+              "negative_price",
+              "dunkelflaute"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "start": {
+            "format": "date-time",
+            "title": "Start",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "start",
+          "end",
+          "hours",
+          "detail"
+        ],
+        "title": "OutlookWindow",
+        "type": "object"
+      },
+      "QueryResolution": {
+        "enum": [
+          "raw",
+          "15min",
+          "1h",
+          "1d"
+        ],
+        "title": "QueryResolution",
+        "type": "string"
+      },
+      "Severity": {
+        "enum": [
+          "info",
+          "warning",
+          "critical"
+        ],
+        "title": "Severity",
+        "type": "string"
+      },
+      "SourceStatusOut": {
+        "additionalProperties": false,
+        "properties": {
+          "attribution": {
+            "title": "Attribution",
+            "type": "string"
+          },
+          "consecutive_failures": {
+            "title": "Consecutive Failures",
+            "type": "integer"
+          },
+          "data_age_seconds": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Data Age Seconds"
+          },
+          "gap_ratio": {
+            "title": "Gap Ratio",
+            "type": "number"
+          },
+          "healthy": {
+            "title": "Healthy",
+            "type": "boolean"
+          },
+          "last_attempt": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Attempt"
+          },
+          "last_error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Error"
+          },
+          "last_success": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Success"
+          },
+          "latency_ms": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latency Ms"
+          },
+          "license": {
+            "title": "License",
+            "type": "string"
+          },
+          "newest_data": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Newest Data"
+          },
+          "plausibility_violations": {
+            "title": "Plausibility Violations",
+            "type": "integer"
+          },
+          "rows_last_run": {
+            "title": "Rows Last Run",
+            "type": "integer"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source",
+          "license",
+          "attribution",
+          "last_attempt",
+          "last_success",
+          "last_error",
+          "latency_ms",
+          "rows_last_run",
+          "gap_ratio",
+          "plausibility_violations",
+          "consecutive_failures",
+          "newest_data",
+          "data_age_seconds",
+          "healthy"
+        ],
+        "title": "SourceStatusOut",
+        "type": "object"
+      },
+      "SourcesResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/SourceStatusOut"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          }
+        },
+        "required": [
+          "meta",
+          "data"
+        ],
+        "title": "SourcesResponse",
+        "type": "object"
+      },
+      "SummaryNow": {
+        "additionalProperties": false,
+        "properties": {
+          "as_of": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "As Of"
+          },
+          "co2_intensity": {
+            "$ref": "#/components/schemas/Value"
+          },
+          "flows": {
+            "items": {
+              "$ref": "#/components/schemas/FlowOut"
+            },
+            "title": "Flows",
+            "type": "array"
+          },
+          "frequency": {
+            "$ref": "#/components/schemas/FrequencySummary"
+          },
+          "generation": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/Value"
+            },
+            "title": "Generation",
+            "type": "object"
+          },
+          "load": {
+            "$ref": "#/components/schemas/Value"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          },
+          "net_import": {
+            "$ref": "#/components/schemas/Value"
+          },
+          "price": {
+            "$ref": "#/components/schemas/Value"
+          },
+          "price_negative": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price Negative"
+          },
+          "renewable_share": {
+            "$ref": "#/components/schemas/Value"
+          },
+          "residual_load": {
+            "$ref": "#/components/schemas/Value"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/Attribution"
+            },
+            "title": "Sources",
+            "type": "array"
+          }
+        },
+        "required": [
+          "meta",
+          "as_of",
+          "generation",
+          "load",
+          "residual_load",
+          "renewable_share",
+          "co2_intensity",
+          "price",
+          "price_negative",
+          "net_import",
+          "flows",
+          "frequency",
+          "sources"
+        ],
+        "title": "SummaryNow",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      },
+      "Value": {
+        "additionalProperties": false,
+        "properties": {
+          "age_seconds": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Age Seconds"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source"
+          },
+          "stale": {
+            "default": false,
+            "title": "Stale",
+            "type": "boolean"
+          },
+          "ts": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Interval start, UTC",
+            "title": "Ts"
+          },
+          "unit": {
+            "title": "Unit",
+            "type": "string"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          }
+        },
+        "required": [
+          "value",
+          "unit",
+          "ts",
+          "source"
+        ],
+        "title": "Value",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "description": "\nRead-only API of **GridPulse**, an open-source situational picture of the German and\nEuropean power system built exclusively from public, official data sources\n(SMARD/Bundesnetzagentur, Energy-Charts/Fraunhofer ISE, Open-Meteo, optional ENTSO-E).\n\n* All timestamps are **UTC** and denote the **start** of the interval.\n* Every response carries `meta.source`, `meta.license` and `meta.attribution`.\n* Rate limited per client; send `X-API-Key` for a higher limit (if keys are configured).\n\n**Disclaimer:** GridPulse is advisory only. It sends no control commands, is not\nconnected to SCADA systems and is no substitute for certified control systems.\n",
+    "license": {
+      "identifier": "Apache-2.0",
+      "name": "Apache-2.0"
+    },
+    "title": "GridPulse API",
+    "version": "0.1.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/v1/alerts/test": {
+      "post": {
+        "operationId": "alerts_test_api_v1_alerts_test_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-API-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-admin-token",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlertTestResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Missing or invalid API key"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Admin endpoints disabled"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Rate limit exceeded (see Retry-After)"
+          }
+        },
+        "summary": "Send a test notification to all channels (needs X-Admin-Token)"
+      }
+    },
+    "/api/v1/events": {
+      "get": {
+        "operationId": "list_events_api_v1_events_get",
+        "parameters": [
+          {
+            "description": "Inclusive, ISO 8601 with offset",
+            "in": "query",
+            "name": "start",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Inclusive, ISO 8601 with offset",
+              "examples": [
+                "2026-10-17T00:00:00Z"
+              ],
+              "title": "Start"
+            }
+          },
+          {
+            "description": "Exclusive, ISO 8601 with offset",
+            "in": "query",
+            "name": "end",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Exclusive, ISO 8601 with offset",
+              "examples": [
+                "2026-10-18T00:00:00Z"
+              ],
+              "title": "End"
+            }
+          },
+          {
+            "in": "query",
+            "name": "min_severity",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/Severity"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Min Severity"
+            }
+          },
+          {
+            "in": "query",
+            "name": "rule_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "maxItems": 20,
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "examples": [
+                [
+                  "FREQ-001"
+                ]
+              ],
+              "title": "Rule Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "category",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "$ref": "#/components/schemas/EventCategory"
+                  },
+                  "maxItems": 10,
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Category"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 1000,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-API-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Missing or invalid API key"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Rate limit exceeded (see Retry-After)"
+          }
+        },
+        "summary": "Detected events"
+      }
+    },
+    "/api/v1/export": {
+      "get": {
+        "operationId": "export_api_v1_export_get",
+        "parameters": [
+          {
+            "description": "Repeat for several metrics",
+            "in": "query",
+            "name": "metric",
+            "required": true,
+            "schema": {
+              "description": "Repeat for several metrics",
+              "examples": [
+                [
+                  "load.actual"
+                ]
+              ],
+              "items": {
+                "$ref": "#/components/schemas/MetricId"
+              },
+              "title": "Metric",
+              "type": "array"
+            }
+          },
+          {
+            "description": "Inclusive, ISO 8601 with offset",
+            "in": "query",
+            "name": "start",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Inclusive, ISO 8601 with offset",
+              "examples": [
+                "2026-10-17T00:00:00Z"
+              ],
+              "title": "Start"
+            }
+          },
+          {
+            "description": "Exclusive, ISO 8601 with offset",
+            "in": "query",
+            "name": "end",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Exclusive, ISO 8601 with offset",
+              "examples": [
+                "2026-10-18T00:00:00Z"
+              ],
+              "title": "End"
+            }
+          },
+          {
+            "in": "query",
+            "name": "area",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "maxItems": 20,
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "examples": [
+                [
+                  "DE"
+                ]
+              ],
+              "title": "Area"
+            }
+          },
+          {
+            "in": "query",
+            "name": "kind",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/Kind"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Kind"
+            }
+          },
+          {
+            "in": "query",
+            "name": "source",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "maxItems": 10,
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "examples": [
+                [
+                  "smard"
+                ]
+              ],
+              "title": "Source"
+            }
+          },
+          {
+            "in": "query",
+            "name": "resolution",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/QueryResolution",
+              "default": "1h"
+            }
+          },
+          {
+            "in": "query",
+            "name": "format",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/ExportFormat",
+              "default": "csv"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-API-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.apache.parquet": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              },
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Missing or invalid API key"
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Too many rows; narrow the query"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Rate limit exceeded (see Retry-After)"
+          }
+        },
+        "summary": "Export as CSV or Parquet"
+      }
+    },
+    "/api/v1/forecast/residual-load": {
+      "get": {
+        "operationId": "forecast_residual_load_api_v1_forecast_residual_load_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "hours",
+            "required": false,
+            "schema": {
+              "default": 48,
+              "maximum": 168,
+              "minimum": 1,
+              "title": "Hours",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-API-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForecastResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Missing or invalid API key"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Rate limit exceeded (see Retry-After)"
+          }
+        },
+        "summary": "Residual load outlook"
+      }
+    },
+    "/api/v1/metrics": {
+      "get": {
+        "operationId": "metric_catalog_api_v1_metrics_get",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-API-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetricsCatalog"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Missing or invalid API key"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Rate limit exceeded (see Retry-After)"
+          }
+        },
+        "summary": "Metric catalogue with units and colours"
+      }
+    },
+    "/api/v1/observations": {
+      "get": {
+        "description": "Canonical observations. `resolution` 15min/1h/1d are means per bucket; daily buckets follow Europe/Berlin calendar days. Paginate with `offset`.",
+        "operationId": "observations_api_v1_observations_get",
+        "parameters": [
+          {
+            "description": "Repeat for several metrics",
+            "in": "query",
+            "name": "metric",
+            "required": true,
+            "schema": {
+              "description": "Repeat for several metrics",
+              "examples": [
+                [
+                  "load.actual"
+                ]
+              ],
+              "items": {
+                "$ref": "#/components/schemas/MetricId"
+              },
+              "title": "Metric",
+              "type": "array"
+            }
+          },
+          {
+            "description": "Inclusive, ISO 8601 with offset",
+            "in": "query",
+            "name": "start",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Inclusive, ISO 8601 with offset",
+              "examples": [
+                "2026-10-17T00:00:00Z"
+              ],
+              "title": "Start"
+            }
+          },
+          {
+            "description": "Exclusive, ISO 8601 with offset",
+            "in": "query",
+            "name": "end",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Exclusive, ISO 8601 with offset",
+              "examples": [
+                "2026-10-18T00:00:00Z"
+              ],
+              "title": "End"
+            }
+          },
+          {
+            "in": "query",
+            "name": "area",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "maxItems": 20,
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "examples": [
+                [
+                  "DE"
+                ]
+              ],
+              "title": "Area"
+            }
+          },
+          {
+            "in": "query",
+            "name": "kind",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/Kind"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Kind"
+            }
+          },
+          {
+            "in": "query",
+            "name": "source",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "maxItems": 10,
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "examples": [
+                [
+                  "smard"
+                ]
+              ],
+              "title": "Source"
+            }
+          },
+          {
+            "in": "query",
+            "name": "resolution",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/QueryResolution",
+              "default": "15min"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 1000,
+              "maximum": 10000,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-API-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObservationsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Missing or invalid API key"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Rate limit exceeded (see Retry-After)"
+          }
+        },
+        "summary": "Time series"
+      }
+    },
+    "/api/v1/sources/status": {
+      "get": {
+        "operationId": "sources_status_api_v1_sources_status_get",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-API-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SourcesResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Missing or invalid API key"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Rate limit exceeded (see Retry-After)"
+          }
+        },
+        "summary": "Data quality per source"
+      }
+    },
+    "/api/v1/summary/now": {
+      "get": {
+        "operationId": "summary_now_api_v1_summary_now_get",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-API-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SummaryNow"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Missing or invalid API key"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Rate limit exceeded (see Retry-After)"
+          }
+        },
+        "summary": "Live situation (Lage)"
+      }
+    },
+    "/healthz": {
+      "get": {
+        "operationId": "healthz_healthz_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Health"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Liveness",
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/readyz": {
+      "get": {
+        "operationId": "readyz_readyz_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Health"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Health"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Readiness (DB + last ingest)",
+        "tags": [
+          "health"
+        ]
+      }
+    }
+  }
+}
