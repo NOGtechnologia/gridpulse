@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Publication_MarketDocument xmlns="urn:iec62325.351:tc57wg16:451-3:publicationdocument:7:3">
+  <mRID>constructed-fixture-0002</mRID>
+  <revisionNumber>1</revisionNumber>
+  <type>A44</type>
+  <createdDateTime>2026-10-18T12:00:00Z</createdDateTime>
+  <period.timeInterval>
+    <start>2026-10-17T22:00Z</start>
+    <end>2026-10-17T23:00Z</end>
+  </period.timeInterval>
+  <TimeSeries>
+    <mRID>1</mRID>
+    <businessType>A62</businessType>
+    <in_Domain.mRID codingScheme="A01">10Y1001A1001A82H</in_Domain.mRID>
+    <out_Domain.mRID codingScheme="A01">10Y1001A1001A82H</out_Domain.mRID>
+    <currency_Unit.name>EUR</currency_Unit.name>
+    <price_Measure_Unit.name>MWH</price_Measure_Unit.name>
+    <curveType>A03</curveType>
+    <Period>
+      <timeInterval>
+        <start>2026-10-17T22:00Z</start>
+        <end>2026-10-17T23:00Z</end>
+      </timeInterval>
+      <resolution>PT15M</resolution>
+      <Point>
+        <position>1</position>
+        <price.amount>209.27</price.amount>
+      </Point>
+      <Point>
+        <position>2</position>
+        <price.amount>-1.50</price.amount>
+      </Point>
+      <!-- position 3 omitted on purpose: curve type A03 repeats the previous value -->
+      <Point>
+        <position>4</position>
+        <price.amount>199.67</price.amount>
+      </Point>
+    </Period>
+  </TimeSeries>
+</Publication_MarketDocument>

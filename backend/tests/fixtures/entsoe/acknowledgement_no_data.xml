@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Acknowledgement_MarketDocument xmlns="urn:iec62325.351:tc57wg16:451-1:acknowledgementdocument:7:0">
+  <mRID>constructed-fixture-0003</mRID>
+  <createdDateTime>2026-10-18T12:00:00Z</createdDateTime>
+  <Reason>
+    <code>999</code>
+    <text>No matching data found for Data item ACTUAL_TOTAL_LOAD_R3</text>
+  </Reason>
+</Acknowledgement_MarketDocument>
