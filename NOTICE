@@ -1,0 +1,38 @@
+GridPulse
+Copyright 2026 The GridPulse contributors
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+GridPulse displays and redistributes data from the following sources. The data is
+NOT covered by the Apache License; the licences of the respective providers apply:
+
+* SMARD.de – Bundesnetzagentur (German Federal Network Agency)
+  Licence: Creative Commons Attribution 4.0 International (CC BY 4.0)
+  Attribution: "Bundesnetzagentur | SMARD.de"
+  https://www.smard.de/home/hilfe/nutzungsbedingungen
+
+* Energy-Charts – Fraunhofer Institute for Solar Energy Systems ISE
+  Licence: CC BY 4.0 (individual series may carry the licence of the original
+  publisher, e.g. "CC BY 4.0 from Bundesnetzagentur | SMARD.de", which is passed on)
+  Attribution: "Energy-Charts.info (Fraunhofer ISE)"
+  https://www.energy-charts.info
+
+* Open-Meteo
+  Licence: CC BY 4.0 – "Weather data by Open-Meteo.com"
+  https://open-meteo.com/en/license
+
+* ENTSO-E Transparency Platform (optional, requires a personal security token)
+  Terms and Conditions of the ENTSO-E Transparency Platform apply.
+  https://transparency.entsoe.eu
+
+* Map outlines: Made with Natural Earth. Free vector and raster map data @ naturalearthdata.com
+  (public domain).
+
+Derived values (residual load, renewable share, CO2 intensity, events) are
+computed by GridPulse from the above data and inherit their attribution
+requirements. CO2 emission factors: IPCC AR5 WG III Annex III (2014), see
+backend/src/gridpulse/domain/co2.py.
+
+DISCLAIMER: GridPulse is a read-only, advisory tool. It sends no control
+commands, is not connected to SCADA/control systems and is no substitute for
+certified control systems.

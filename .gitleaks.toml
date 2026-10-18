@@ -1,0 +1,12 @@
+title = "GridPulse gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Test fixtures and documented example values"
+paths = [
+  '''backend/tests/fixtures/.*''',
+  '''frontend/pnpm-lock\.yaml''',
+  '''backend/uv\.lock''',
+]

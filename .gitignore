@@ -1,0 +1,37 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+backend/dist/
+mutants/
+
+# Node / Next.js
+node_modules/
+.next/
+frontend/coverage/
+frontend/playwright-report/
+frontend/test-results/
+frontend/.lighthouseci/
+frontend/.api-check.ts
+*.tsbuildinfo
+next-env.d.ts
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+frontend/public/maplibre/

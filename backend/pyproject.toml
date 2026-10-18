@@ -1,0 +1,116 @@
+[project]
+name = "gridpulse"
+version = "0.1.0"
+description = "Open-source grid situational awareness dashboard built on public, official data sources."
+license = "Apache-2.0"
+requires-python = ">=3.12,<3.13"
+authors = [{ name = "GridPulse contributors" }]
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.32",
+    "pydantic>=2.9",
+    "pydantic-settings>=2.6",
+    "sqlalchemy[asyncio]>=2.0.36",
+    "asyncpg>=0.30",
+    "alembic>=1.14",
+    "httpx>=0.28",
+    "pandas>=2.2",
+    "pandera>=0.21",
+    "pyarrow>=18",
+    "apscheduler>=3.10,<4",
+    "prometheus-client>=0.21",
+    "structlog>=24.4",
+    "defusedxml>=0.7",
+    "python-multipart>=0.0.18",
+]
+
+[project.scripts]
+gridpulse-api = "gridpulse.api.main:run"
+gridpulse-worker = "gridpulse.worker.main:run"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "pytest-asyncio>=0.24",
+    "pytest-cov>=6.0",
+    "hypothesis>=6.120",
+    "ruff>=0.8",
+    "mypy>=1.13",
+    "pandas-stubs>=2.2",
+    "respx>=0.21",
+    "testcontainers[postgres]>=4.8",
+    "aiosqlite>=0.20",
+    "pip-audit>=2.7",
+    "pip-licenses>=5.0",
+    "schemathesis>=3.38",
+    "types-defusedxml>=0.7",
+]
+
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/gridpulse"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "S", "SIM", "RUF", "ASYNC", "DTZ", "PL"]
+ignore = [
+    # Magic values are idiomatic in tests and thresholds are named in settings.
+    "PLR2004",
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Tests legitimately use assert and fixed fake data.
+# S311: tests use seeded random.Random for deterministic backoff jitter, not cryptography.
+"tests/**" = ["S101", "S105", "S106", "S311", "PLR0913"]
+# Task runner / scripts execute fixed developer commands (no untrusted input).
+"../scripts/**" = ["S603"]
+# FastAPI declares every query parameter as a function argument; endpoints with
+# filters + paging necessarily exceed the generic argument limit.
+"src/gridpulse/api/v1.py" = ["PLR0913", "PLR0917"]
+
+[tool.ruff.lint.pylint]
+max-args = 8
+
+[tool.mypy]
+strict = true
+python_version = "3.12"
+plugins = ["pydantic.mypy"]
+mypy_path = "src"
+packages = ["gridpulse"]
+
+[[tool.mypy.overrides]]
+# Third-party libraries without type information.
+module = ["apscheduler.*", "testcontainers.*", "pyarrow.*", "schemathesis.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+markers = [
+    "integration: needs a real TimescaleDB (Docker/Testcontainers or GRIDPULSE_TEST_DATABASE_URL)",
+]
+addopts = "-ra --strict-markers"
+
+[tool.mutmut]
+# Nightly mutation testing of the pure domain logic (spec 7.2, score >= 80 %).
+paths_to_mutate = ["src/gridpulse/domain/"]
+tests_dir = ["tests/unit/", "tests/property/"]
+also_copy = ["tests/fixtures/", "tests/conftest.py"]
+
+[tool.coverage.run]
+source = ["gridpulse"]
+branch = true
+omit = ["*/storage/alembic/*", "*/__main__.py"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+exclude_also = ["if TYPE_CHECKING:", "raise NotImplementedError", "\\.\\.\\."]
