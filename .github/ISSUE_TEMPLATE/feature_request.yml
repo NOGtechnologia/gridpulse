@@ -1,0 +1,23 @@
+name: Feature request
+description: Suggest an improvement
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Which operational question should GridPulse answer?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal (data source, metric, view)
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - label: Uses only public, official data sources
+          required: true
+        - label: Stays read-only and advisory (no control commands)
+          required: true

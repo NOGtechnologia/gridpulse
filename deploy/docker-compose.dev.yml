@@ -1,0 +1,24 @@
+# Development: only the database, for running api/worker/web locally.
+#   docker compose -f deploy/docker-compose.dev.yml up -d
+#   GRIDPULSE_DATABASE_URL=postgresql+asyncpg://gridpulse:gridpulse@localhost:5432/gridpulse
+name: gridpulse-dev
+
+services:
+  db:
+    image: timescale/timescaledb:2.30.2-pg16
+    environment:
+      POSTGRES_USER: gridpulse
+      POSTGRES_PASSWORD: gridpulse
+      POSTGRES_DB: gridpulse
+      TIMESCALEDB_TELEMETRY: "off"
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-dev:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gridpulse -d gridpulse"]
+      interval: 5s
+      retries: 20
+
+volumes:
+  db-dev:

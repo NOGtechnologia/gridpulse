@@ -1,0 +1,18 @@
+name: Data source changed / broken
+description: An upstream API changed its format or availability
+labels: [data-source]
+body:
+  - type: dropdown
+    id: source
+    attributes:
+      label: Source
+      options: [SMARD, Energy-Charts, Open-Meteo, ENTSO-E, other]
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Output of `make verify-sources`
+      render: shell
+    validations:
+      required: true

@@ -1,0 +1,81 @@
+# GridPulse stack:  docker compose -f deploy/docker-compose.yml up -d
+# Demo mode (offline, synthetic data):  GRIDPULSE_DEMO=1 docker compose -f deploy/docker-compose.yml up -d
+name: gridpulse
+
+x-hardening: &hardening
+  read_only: true
+  security_opt: ["no-new-privileges:true"]
+  cap_drop: ["ALL"]
+  restart: unless-stopped
+
+x-backend-env: &backend-env
+  GRIDPULSE_DATABASE_URL: postgresql+asyncpg://gridpulse:${POSTGRES_PASSWORD:-gridpulse}@db:5432/gridpulse
+  GRIDPULSE_DEMO: ${GRIDPULSE_DEMO:-0}
+  GRIDPULSE_ENTSOE_TOKEN: ${GRIDPULSE_ENTSOE_TOKEN:-}
+  GRIDPULSE_LOG_LEVEL: ${GRIDPULSE_LOG_LEVEL:-INFO}
+  GRIDPULSE_CORS_ORIGINS: ${GRIDPULSE_CORS_ORIGINS:-http://localhost:3000}
+  GRIDPULSE_ADMIN_TOKEN: ${GRIDPULSE_ADMIN_TOKEN:-}
+  GRIDPULSE_ALERT_WEBHOOK_URLS: ${GRIDPULSE_ALERT_WEBHOOK_URLS:-}
+
+services:
+  db:
+    image: timescale/timescaledb:2.30.2-pg16
+    environment:
+      POSTGRES_USER: gridpulse
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-gridpulse}
+      POSTGRES_DB: gridpulse
+      TIMESCALEDB_TELEMETRY: "off"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gridpulse -d gridpulse"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+  worker:
+    <<: *hardening
+    build: ../backend
+    image: ghcr.io/gridpulse/gridpulse-backend:${GRIDPULSE_VERSION:-dev}
+    command: ["gridpulse-worker"]
+    environment: *backend-env
+    tmpfs: ["/tmp"]
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:9101/metrics', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+
+  api:
+    <<: *hardening
+    build: ../backend
+    image: ghcr.io/gridpulse/gridpulse-backend:${GRIDPULSE_VERSION:-dev}
+    command: ["gridpulse-api"]
+    environment: *backend-env
+    tmpfs: ["/tmp"]
+    ports:
+      - "${GRIDPULSE_API_PORT:-8000}:8000"
+    depends_on:
+      worker:
+        condition: service_started
+
+  web:
+    <<: *hardening
+    build: ../frontend
+    image: ghcr.io/gridpulse/gridpulse-web:${GRIDPULSE_VERSION:-dev}
+    environment:
+      GRIDPULSE_API_URL: http://api:8000
+      GRIDPULSE_ADMIN_TOKEN: ${GRIDPULSE_ADMIN_TOKEN:-}
+    tmpfs: ["/tmp", "/app/.next/cache"]
+    ports:
+      - "${GRIDPULSE_WEB_PORT:-3000}:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  db-data:
