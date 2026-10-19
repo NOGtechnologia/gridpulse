@@ -61,10 +61,11 @@ units, unknown metrics) are rejected and reported as `DATA-002`.
 | Package | Responsibility | Purity |
 |---|---|---|
 | `adapters/` | HTTP fetch with backoff + jitter, pure `parse()` | parse is pure |
-| `domain/` | metrics catalogue, time handling, residual load, CO₂, indicators, rules, statistics | pure, 100 % coverage |
+| `domain/` | metrics catalogue, time handling, residual load, CO₂, indicators, rules, statistics, calendar features, forecast scores | pure, 100 % coverage |
 | `validation/` | Pandera schema, plausibility checks, cross-check | pure, 100 % coverage |
-| `storage/` | `Repository` protocol, TimescaleDB + in-memory implementations, Alembic | I/O |
-| `services/` | summary, forecast, analysis (glue between repository and domain) | I/O |
+| `forecasting/` | own model: feature pipeline, gradient boosting, backtest ([forecasting.md](forecasting.md)) | pure (CPU) |
+| `storage/` | `Repository` protocol, TimescaleDB + in-memory implementations, Alembic (`observations`, `events`, `source_status`, `alert_channels`, `api_keys`, `model_runs`) | I/O |
+| `services/` | summary, forecast, analysis, model training (glue between repository and domain) | I/O |
 | `worker/` | job catalogue, ingest pipeline, scheduler, entry point | I/O |
 | `alerts/` | channels and debouncing dispatcher | I/O |
 | `api/` | FastAPI app, routes, rate limiter, API keys, export | I/O |
