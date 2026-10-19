@@ -13,3 +13,4 @@ Format: [MADR](https://adr.github.io/madr/). One file per decision, numbered.
 | [0007](0007-offline-map.md) | Offline border-flow map |
 | [0008](0008-episode-merging.md) | Episode merging of events |
 | [0009](0009-next-root-params.md) | Locale via `next/root-params` |
+| [0010](0010-forecasting-model.md) | Own residual-load model, gated by a backtest |
