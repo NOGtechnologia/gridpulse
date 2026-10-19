@@ -41,6 +41,10 @@ schema = schemathesis.openapi.from_asgi("/api/v1/openapi.json", _app())
 
 
 @schema.exclude(method="POST").parametrize()
-@settings(max_examples=25, deadline=None, suppress_health_check=list(HealthCheck))
+# derandomize: the gate must be reproducible. Unseeded runs occasionally produced a
+# false "schema-violating request accepted" (ST201): a negative case for an array
+# query parameter (e.g. `source`) was a single string, which is indistinguishable
+# from a one-element array once serialised into the query string.
+@settings(max_examples=25, deadline=None, suppress_health_check=list(HealthCheck), derandomize=True)
 def test_api_conforms_to_schema(case: schemathesis.Case) -> None:
     case.call_and_validate()
