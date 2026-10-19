@@ -130,6 +130,7 @@ export function FrequencyTile({
       error={summary ? undefined : error}
       onRetry={onRetry}
       empty={summary !== undefined && freq?.current.value == null}
+      skeletonHeight={176}
       provenance={
         freq ? provenanceOf(freq.current, licenseFor(summary, freq.current.source)) : undefined
       }
@@ -214,6 +215,7 @@ export function MixDonutTile({
       title={t("situation.mixNow")}
       loading={loading && !summary}
       empty={summary !== undefined && total === 0}
+      skeletonHeight={440}
       provenance={first ? provenanceOf(first, licenseFor(summary, first.source)) : undefined}
     >
       {total > 0 ? (

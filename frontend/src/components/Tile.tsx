@@ -60,6 +60,7 @@ export function Tile({
   children,
   className,
   actions,
+  skeletonHeight = 64,
 }: {
   title: string;
   loading?: boolean;
@@ -70,12 +71,15 @@ export function Tile({
   children?: ReactNode;
   className?: string;
   actions?: ReactNode;
+  /** Height of the loaded content in px; reserved while loading (no layout shift). */
+  skeletonHeight?: number;
 }) {
   const t = useTranslations("common");
   const headingId = useId();
+  const showSkeleton = Boolean(loading && !children);
   let body: ReactNode = children;
-  if (loading && !children) {
-    body = <Skeleton className="h-16 w-full" label={t("loading")} />;
+  if (showSkeleton) {
+    body = <Skeleton className="w-full" height={skeletonHeight} label={t("loading")} />;
   } else if (error && !children) {
     body = (
       <div role="alert" className="flex flex-col items-start gap-2 text-sm text-crit">
@@ -98,6 +102,10 @@ export function Tile({
       <CardContent>{body}</CardContent>
       {provenance?.stale ? <p className="sr-only">{t("staleHint")}</p> : null}
       {provenance ? <SourceFooter {...provenance} /> : null}
+      {!provenance && showSkeleton ? (
+        // Keeps the footer's height until source and data age are known.
+        <CardFooter aria-hidden="true">&nbsp;</CardFooter>
+      ) : null}
     </Card>
   );
 }

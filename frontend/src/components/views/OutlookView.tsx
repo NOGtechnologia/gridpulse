@@ -36,7 +36,7 @@ export function BacktestTile({
       }
     : undefined;
   return (
-    <Tile title={t("backtest")} loading={loading} provenance={provenance}>
+    <Tile title={t("backtest")} loading={loading} provenance={provenance} skeletonHeight={196}>
       {model ? (
         <div className="flex flex-col gap-3 text-sm">
           <Badge tone={model.active ? "ok" : "neutral"} className="self-start">
@@ -79,7 +79,7 @@ export function BacktestTile({
           </p>
           <p className="text-xs text-muted">{t("caveat")}</p>
         </div>
-      ) : (
+      ) : loading ? null : (
         <p className="text-sm text-muted">{t("backtestNone")}</p>
       )}
     </Tile>
@@ -169,13 +169,18 @@ export function OutlookView() {
         onRetry={state.reload}
         empty={state.data !== undefined && state.data.points.length === 0}
         provenance={provenance}
+        skeletonHeight={404}
       >
-        {state.data && state.data.points.length > 0 ? (
-          <EChart option={option} height={380} label={t("chart")} />
+        {state.data ? (
+          <>
+            {state.data.points.length > 0 ? (
+              <EChart option={option} height={380} label={t("chart")} />
+            ) : null}
+            <p className="mt-2 text-xs text-muted">
+              {t("basis")} {model?.active ? t("basisModel") : t("basisNoModel")}
+            </p>
+          </>
         ) : null}
-        <p className="mt-2 text-xs text-muted">
-          {t("basis")} {model?.active ? t("basisModel") : t("basisNoModel")}
-        </p>
       </Tile>
       <BacktestTile model={model} loading={state.loading && !state.data} />
       <Tile title={t("windows")} loading={state.loading && !state.data} provenance={provenance}>

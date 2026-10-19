@@ -74,10 +74,12 @@ function MixAreaTile({ summary }: { summary: SummaryNow | undefined }) {
     <Tile
       title={t("situation.mix")}
       className="lg:col-span-2"
-      loading={state.loading}
+      // The 24 h query starts only once the summary names the source and time.
+      loading={state.loading || !summary}
       error={state.error}
       onRetry={state.reload}
-      empty={!state.loading && (state.data?.data.length ?? 0) === 0}
+      empty={!state.loading && summary !== undefined && (state.data?.data.length ?? 0) === 0}
+      skeletonHeight={320}
       provenance={first ? provenanceOf(first, licenseFor(summary, first.source)) : undefined}
     >
       {state.data && state.data.data.length > 0 ? (

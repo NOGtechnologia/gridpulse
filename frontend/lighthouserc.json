@@ -4,6 +4,7 @@
       "url": [
         "http://localhost:3000/de",
         "http://localhost:3000/de/outlook",
+        "http://localhost:3000/de/countries",
         "http://localhost:3000/de/kiosk"
       ],
       "numberOfRuns": 3,
