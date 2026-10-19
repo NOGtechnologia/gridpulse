@@ -115,7 +115,20 @@
     "negative_price": "Negative Preise",
     "dunkelflaute": "Dunkelflaute-Risiko",
     "windowText": "{start} bis {end} ({hours} h) – {detail}",
-    "basis": "Grundlage: offizielle Prognosen der Datenquellen. Kein eigenes Modell aktiv."
+    "basis": "Grundlage: offizielle Prognosen der Datenquellen.",
+    "basisModel": "Zusätzlich eingeblendet: eigenes Modell, weil es die offizielle Prognose im Backtest schlägt.",
+    "basisNoModel": "Eigenes Modell nicht eingeblendet (siehe Backtest).",
+    "model": "Residuallast (eigenes Modell)",
+    "backtest": "Eigenes Prognosemodell – Backtest",
+    "backtestNone": "Noch kein Backtest: Das Modell braucht mindestens 14 Tage Historie mit Wetterdaten (Open-Meteo), Ist-Werten und offizieller Prognose (SMARD). Der Worker trainiert täglich neu.",
+    "active": "Eingeblendet – genauer als die offizielle Prognose (MAE und MAPE)",
+    "inactive": "Nicht eingeblendet – die offizielle Prognose ist genauer",
+    "metric": "Kennzahl",
+    "ownModel": "Eigenes Modell",
+    "officialForecast": "Offizielle Prognose (SMARD)",
+    "backtestWindow": "Testzeitraum {start} bis {end} ({points} Stunden), Training ab {train}.",
+    "algorithm": "{algorithm}, Seed {seed}, {features} Merkmale (Wetter + Kalender).",
+    "caveat": "Hinweis: Für vergangene Stunden speichert Open-Meteo Werte nahe an Messwerten, nicht die damalige Prognose – der Backtest fällt für das eigene Modell daher zu günstig aus. MAPE nur über Stunden mit |Residuallast| ≥ 1 GW."
   },
   "countries": {
     "title": "Ländervergleich",

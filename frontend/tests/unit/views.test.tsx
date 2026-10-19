@@ -165,12 +165,77 @@ describe("other views", () => {
     renderIntl(<OutlookView />);
     expect(await screen.findByText("Negative Preise")).toBeInTheDocument();
     expect(screen.getByText(/min -5 EUR\/MWh/)).toBeInTheDocument();
+    expect(screen.getByText(/Noch kein Backtest/)).toBeInTheDocument();
   });
 
   it("OutlookView without windows", async () => {
     mockFetch({ "/api/v1/forecast/residual-load": { meta, unit: "MW", points: [], windows: [] } });
     renderIntl(<OutlookView />, "en");
     expect(await screen.findByText(/No negative prices/)).toBeInTheDocument();
+  });
+
+  const backtest = (active: boolean) => ({
+    trained_at: "2026-10-18T10:00:00Z",
+    algorithm: "scikit-learn HistGradientBoostingRegressor",
+    seed: 42,
+    target: "load.residual",
+    features: ["hour", "weekday", "holiday"],
+    train_start: "2026-08-18T00:00:00Z",
+    train_end: "2026-10-11T00:00:00Z",
+    test_start: "2026-10-11T00:00:00Z",
+    test_end: "2026-10-18T00:00:00Z",
+    test_points: 168,
+    unit: "MW",
+    mae_model: active ? 900 : 2500,
+    mape_model: active ? 4.2 : null,
+    mae_official: 1200,
+    mape_official: 5.5,
+    active,
+  });
+  const point = {
+    ts: "2026-10-18T12:00:00Z",
+    load: 50000,
+    wind: 20000,
+    solar: 10000,
+    residual_load: 20000,
+    official_residual_load: 21000,
+    model_residual_load: 20500,
+  };
+
+  it("OutlookView shows the model and its backtest when it beats the official forecast", async () => {
+    mockFetch({
+      "/api/v1/forecast/residual-load": {
+        meta,
+        unit: "MW",
+        points: [point],
+        windows: [],
+        model: backtest(true),
+      },
+    });
+    renderIntl(<OutlookView />);
+    expect(await screen.findByText(/✓ Eingeblendet/)).toBeInTheDocument();
+    expect(screen.getByText("900 MW")).toBeInTheDocument();
+    expect(screen.getByText("4,2 %")).toBeInTheDocument();
+    expect(screen.getByText(/Zusätzlich eingeblendet/)).toBeInTheDocument();
+    expect(screen.getByText(/Seed 42, 3 Merkmale/)).toBeInTheDocument();
+    expect(screen.getByText(/Quelle: gridpulse_model/)).toBeInTheDocument();
+  });
+
+  it("OutlookView keeps metrics visible but hides a worse model", async () => {
+    mockFetch({
+      "/api/v1/forecast/residual-load": {
+        meta,
+        unit: "MW",
+        points: [point],
+        windows: [],
+        model: backtest(false),
+      },
+    });
+    renderIntl(<OutlookView />, "en");
+    expect(await screen.findByText(/Not shown – the official forecast/)).toBeInTheDocument();
+    expect(screen.getByText("2,500 MW")).toBeInTheDocument();
+    expect(screen.getByText("–")).toBeInTheDocument();
+    expect(screen.getByText(/Own model not shown/)).toBeInTheDocument();
   });
 
   it("EventsView lists events and filters by severity", async () => {

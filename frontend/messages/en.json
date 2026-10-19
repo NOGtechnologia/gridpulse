@@ -115,7 +115,20 @@
     "negative_price": "Negative prices",
     "dunkelflaute": "Dunkelflaute risk",
     "windowText": "{start} to {end} ({hours} h) – {detail}",
-    "basis": "Based on the official forecasts of the data sources. No custom model active."
+    "basis": "Based on the official forecasts of the data sources.",
+    "basisModel": "Also shown: own model, because it beats the official forecast in the backtest.",
+    "basisNoModel": "Own model not shown (see backtest).",
+    "model": "Residual load (own model)",
+    "backtest": "Own forecasting model – backtest",
+    "backtestNone": "No backtest yet: the model needs at least 14 days of history with weather data (Open-Meteo), actuals and the official forecast (SMARD). The worker retrains daily.",
+    "active": "Shown – more accurate than the official forecast (MAE and MAPE)",
+    "inactive": "Not shown – the official forecast is more accurate",
+    "metric": "Metric",
+    "ownModel": "Own model",
+    "officialForecast": "Official forecast (SMARD)",
+    "backtestWindow": "Test window {start} to {end} ({points} hours), training from {train}.",
+    "algorithm": "{algorithm}, seed {seed}, {features} features (weather + calendar).",
+    "caveat": "Note: for past hours Open-Meteo stores values close to observations, not the forecast available at the time – the backtest therefore flatters the own model. MAPE only over hours with |residual load| ≥ 1 GW."
   },
   "countries": {
     "title": "Country comparison",
