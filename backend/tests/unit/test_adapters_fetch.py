@@ -8,6 +8,7 @@ from datetime import UTC, datetime, timedelta
 from typing import Any, cast
 
 import httpx
+import pandas as pd
 import pytest
 import respx
 
@@ -327,6 +328,34 @@ def test_entsoe_skips_incomplete_points_and_respects_window() -> None:
     frame = adapter.parse(payload)
     assert frame["value"].tolist() == [5.0]  # position 2 forward-filled, position 1 outside window
     assert frame["ts"].iloc[0].isoformat() == "2026-01-01T00:30:00+00:00"
+
+
+def test_entsoe_keeps_finest_resolution_for_overlapping_series() -> None:
+    """Since the 15-min day-ahead MTU some zones publish PT60M and PT15M series side by side."""
+
+    def series(resolution: str, values: list[float]) -> str:
+        points = "".join(
+            f"<Point><position>{i}</position><price.amount>{v}</price.amount></Point>"
+            for i, v in enumerate(values, start=1)
+        )
+        return (
+            "<TimeSeries><Period><timeInterval><start>2026-01-01T00:00Z</start>"
+            f"<end>2026-01-01T01:00Z</end></timeInterval><resolution>{resolution}</resolution>"
+            f"{points}</Period></TimeSeries>"
+        )
+
+    xml = (
+        "<Publication_MarketDocument>"
+        + series("PT60M", [50.0])
+        + series("PT15M", [10.0, 20.0, 30.0, 40.0])
+        + "</Publication_MarketDocument>"
+    )
+    frame = EntsoeAdapter(cast("HttpFetcher", None), "token").parse(
+        _entsoe_payload(MetricId.PRICE_DAY_AHEAD, xml)
+    )
+    validate_frame(frame)
+    assert frame["value"].tolist() == [10.0, 20.0, 30.0, 40.0]
+    assert set(frame["resolution"]) == {pd.Timedelta(minutes=15)}
 
 
 def test_entsoe_rejects_billion_laughs() -> None:

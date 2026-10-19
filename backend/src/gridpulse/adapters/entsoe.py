@@ -27,7 +27,7 @@ if TYPE_CHECKING:
 
 from gridpulse.adapters.base import HttpFetcher, RawPayload, UnsupportedMetricError
 from gridpulse.domain.metrics import Kind, MetricId
-from gridpulse.domain.observations import concat_frames, make_frame
+from gridpulse.domain.observations import KEY_COLUMNS, concat_frames, make_frame
 from gridpulse.domain.timeutils import ensure_utc
 
 BASE_URL = "https://web-api.tp.entsoe.eu/api"
@@ -127,7 +127,12 @@ class EntsoeAdapter:
             for series in (e for e in root.iter() if _local(e.tag) == "TimeSeries"):
                 for period in _children(series, "Period"):
                     frames.append(self._parse_period(period, value_tag, payload))
-        return concat_frames(frames)
+        frame = concat_frames(frames)
+        # Since the 15-min day-ahead MTU some zones publish an hourly and a quarter-hourly
+        # series for the same day; keep the finest one so the upsert key stays unique.
+        frame = frame.sort_values(["ts", "resolution"], kind="stable")
+        frame = frame.drop_duplicates(subset=list(KEY_COLUMNS), keep="first")
+        return frame.reset_index(drop=True)
 
     def _parse_period(self, period: Element, value_tag: str, payload: RawPayload) -> pd.DataFrame:
         interval = _find(period, "timeInterval")

@@ -11,6 +11,7 @@ import httpx
 import pytest
 import respx
 
+from gridpulse.adapters.entsoe import AREAS
 from gridpulse.alerts.dispatcher import AlertDispatcher
 from gridpulse.observability import configure_logging, get_logger
 from gridpulse.settings import Settings
@@ -56,6 +57,8 @@ async def test_worker_ingests_all_sources(load_fixture: Loader) -> None:
             repo, settings, client, AlertDispatcher(repo, [], timedelta(0)), clock=lambda: now
         )
         assert set(worker.jobs) == {"smard", "energy_charts", "open_meteo", "entsoe"}
+        # Load and day-ahead price for every bidding zone of the country comparison.
+        assert len(worker.jobs["entsoe"]) == 2 * len(AREAS)
         for source in worker.jobs:
             await worker.ingest(source)
         await worker.ingest_frequency()

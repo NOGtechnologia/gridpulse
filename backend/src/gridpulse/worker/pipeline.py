@@ -48,10 +48,13 @@ class IngestJob:
     lookback: timedelta = timedelta(hours=48)
     lookahead: timedelta = timedelta(0)
     border_flows: bool = False
+    # Distinguishes jobs of one source that differ only by area (ENTSO-E bidding zones).
+    area: str | None = None
 
     @property
     def name(self) -> str:
         suffix = ":borders" if self.border_flows else ""
+        suffix += f"@{self.area}" if self.area else ""
         return f"{self.adapter.source_id}:{self.metric.value}:{self.kind.value}{suffix}"
 
 
@@ -258,11 +261,19 @@ def weather_jobs(adapter: OpenMeteoAdapter, horizon: timedelta) -> list[IngestJo
     ]
 
 
-def entsoe_jobs(adapter: EntsoeAdapter, backfill: timedelta, horizon: timedelta) -> list[IngestJob]:
-    return [
-        IngestJob(adapter, MetricId.LOAD_ACTUAL, Kind.ACTUAL, backfill),
-        IngestJob(adapter, MetricId.PRICE_DAY_AHEAD, Kind.ACTUAL, backfill, horizon),
-    ]
+def entsoe_jobs(
+    adapters: Sequence[EntsoeAdapter], backfill: timedelta, horizon: timedelta
+) -> list[IngestJob]:
+    """Actual load and day-ahead price per bidding zone (country comparison, phase 6)."""
+    jobs: list[IngestJob] = []
+    for adapter in adapters:
+        jobs += [
+            IngestJob(adapter, MetricId.LOAD_ACTUAL, Kind.ACTUAL, backfill, area=adapter.area),
+            IngestJob(
+                adapter, MetricId.PRICE_DAY_AHEAD, Kind.ACTUAL, backfill, horizon, area=adapter.area
+            ),
+        ]
+    return jobs
 
 
 AsyncTask = Callable[[], Awaitable[object]]

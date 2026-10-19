@@ -374,9 +374,15 @@ def test_default_job_catalogue() -> None:
     from gridpulse.adapters.open_meteo import OpenMeteoAdapter  # noqa: PLC0415
 
     assert len(weather_jobs(OpenMeteoAdapter(fetcher), timedelta(hours=1))) == 4
-    assert (
-        len(entsoe_jobs(EntsoeAdapter(fetcher, "t"), timedelta(hours=1), timedelta(hours=1))) == 2
-    )
+    zones = [EntsoeAdapter(fetcher, "t", area=a) for a in ("DE-LU", "FR")]
+    entsoe = entsoe_jobs(zones, timedelta(hours=1), timedelta(hours=1))
+    assert [j.name for j in entsoe] == [
+        "entsoe:load.actual:actual@DE-LU",
+        "entsoe:price.day_ahead:actual@DE-LU",
+        "entsoe:load.actual:actual@FR",
+        "entsoe:price.day_ahead:actual@FR",
+    ]
+    assert entsoe[1].lookahead == timedelta(hours=1)
 
 
 @respx.mock

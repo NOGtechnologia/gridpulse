@@ -12,7 +12,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from gridpulse.adapters.base import HttpFetcher
 from gridpulse.adapters.energy_charts import EnergyChartsAdapter
-from gridpulse.adapters.entsoe import EntsoeAdapter
+from gridpulse.adapters.entsoe import AREAS, EntsoeAdapter
 from gridpulse.adapters.open_meteo import OpenMeteoAdapter
 from gridpulse.adapters.smard import SmardAdapter
 from gridpulse.alerts.dispatcher import AlertDispatcher
@@ -61,9 +61,8 @@ class Worker:
         }
         token = self.settings.entsoe_token
         if token is not None and token.get_secret_value():
-            self.jobs["entsoe"] = entsoe_jobs(
-                EntsoeAdapter(fetcher, token.get_secret_value()), backfill, horizon
-            )
+            zones = [EntsoeAdapter(fetcher, token.get_secret_value(), area) for area in AREAS]
+            self.jobs["entsoe"] = entsoe_jobs(zones, backfill, horizon)
         self.frequency = frequency_jobs(self.ec)
         self.ingestor = Ingestor(self.repo, self.settings.plausibility_config(), self.clock)
 
