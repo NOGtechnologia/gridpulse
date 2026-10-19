@@ -132,7 +132,7 @@ async def main() -> int:
 
     report = _report(run, as_of, config)
     if args.report:
-        args.report.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+        args.report.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8", newline="\n")
     print(json.dumps(report, indent=2))
     if run is None:
         return 1

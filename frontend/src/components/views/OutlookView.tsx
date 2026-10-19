@@ -39,7 +39,7 @@ export function BacktestTile({
     <Tile title={t("backtest")} loading={loading} provenance={provenance}>
       {model ? (
         <div className="flex flex-col gap-3 text-sm">
-          <Badge tone={model.active ? "ok" : "neutral"}>
+          <Badge tone={model.active ? "ok" : "neutral"} className="self-start">
             {model.active ? `✓ ${t("active")}` : `– ${t("inactive")}`}
           </Badge>
           <table className="w-full max-w-xl text-left">
