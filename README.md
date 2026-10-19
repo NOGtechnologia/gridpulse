@@ -36,7 +36,8 @@ Open <http://localhost:3000> (dashboard) and <http://localhost:8000/api/docs> (A
 | View | What it shows |
 |---|---|
 | **Lage** (situation) | grid frequency with traffic light (±50/±100 mHz) and 60-min sparkline, load, residual load, renewable share, CO₂ intensity, day-ahead price (negative prices marked), generation mix (stacked area + donut), cross-border flows on a map |
-| **Ausblick** (outlook) | 48 h residual load from official forecasts, negative-price and dunkelflaute windows |
+| **Ausblick** (outlook) | 48 h residual load from official forecasts, negative-price and dunkelflaute windows; own model with backtest metrics, shown only when it beats the official forecast ([forecasting](docs/forecasting.md)) |
+| **Länder** (countries) | load and day-ahead price per bidding zone (Germany and neighbours) from ENTSO-E; needs `GRIDPULSE_ENTSOE_TOKEN`, otherwise explains how to enable it |
 | **Ereignisse** (events) | deterministic rules (frequency, forecast error, price spikes, stale data), robust z-score/MAD anomalies, plausibility and source cross-check violations; webhook, Slack/Teams and e-mail notifications with debouncing |
 | **Historie** (history) | free period, 15 min / 1 h / 1 day (Berlin calendar days), comparison of two periods, CSV/Parquet export with licence metadata |
 | **Status** | per source: last success, latency, gap ratio, plausibility violations; Prometheus metrics |

@@ -1,0 +1,41 @@
+{
+  "as_of": "2026-10-19T06:00:00+00:00",
+  "config": {
+    "history_days": 90,
+    "test_days": 7,
+    "min_train_days": 14
+  },
+  "run": {
+    "trained_at": "2026-10-19T06:00:00+00:00",
+    "algorithm": "scikit-learn HistGradientBoostingRegressor",
+    "seed": 42,
+    "target": "load.residual",
+    "features": [
+      "weather.cloud_cover@WX:hamburg",
+      "weather.cloud_cover@WX:kassel",
+      "weather.cloud_cover@WX:munich",
+      "weather.shortwave_radiation@WX:hamburg",
+      "weather.shortwave_radiation@WX:kassel",
+      "weather.shortwave_radiation@WX:munich",
+      "weather.temperature_2m@WX:hamburg",
+      "weather.temperature_2m@WX:kassel",
+      "weather.temperature_2m@WX:munich",
+      "weather.wind_speed_100m@WX:hamburg",
+      "weather.wind_speed_100m@WX:kassel",
+      "weather.wind_speed_100m@WX:munich",
+      "hour",
+      "weekday",
+      "holiday"
+    ],
+    "train_start": "2026-08-17T18:00:00+00:00",
+    "train_end": "2026-10-12T05:00:00+00:00",
+    "test_start": "2026-10-12T05:00:00+00:00",
+    "test_end": "2026-10-19T05:00:00+00:00",
+    "test_points": 168,
+    "mae_model": 5060.0769339232575,
+    "mape_model": 21.16339299878798,
+    "mae_official": 1722.1548214285715,
+    "mape_official": 6.902110182353266,
+    "active": false
+  }
+}

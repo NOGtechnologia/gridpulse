@@ -87,13 +87,26 @@ Frequency is reduced to **10 s buckets keeping the sample with the largest
 returns a JSON **list** (one object per location) when several coordinates are
 requested. Units: °C, km/h, W/m², %. Areas: `WX:hamburg`, `WX:kassel`, `WX:munich`.
 
+`past_days` (max. 92) follows the requested window so that the forecasting model can
+be backfilled. Verified 2026-10-19: the API keeps only about two months of past
+hours; older hours inside `past_days` are returned as `null` and dropped by `parse()`
+(fixture `forecast_past_days.json`). These past values are close to observations,
+not archived day-ahead forecasts (see [forecasting.md](forecasting.md)).
+
 ## ENTSO-E
 
 `https://web-api.tp.entsoe.eu/api` with `securityToken`:
 `documentType=A65&processType=A16&outBiddingZone_Domain=<EIC>` (actual load,
 `GL_MarketDocument`) and `documentType=A44&in_Domain=out_Domain=<EIC>`
 (day-ahead prices, `Publication_MarketDocument`). Points use 1-based `position`;
-curve type A03 omits repeated values, which `parse()` forward-fills.
+curve type A03 omits repeated values, which `parse()` forward-fills. If a zone
+publishes an hourly and a quarter-hourly day-ahead series for the same day (15-min
+MTU transition), the finest resolution is kept.
+
+The worker loads both documents for every zone in `AREAS` (DE-LU, FR, NL, BE, AT,
+PL, CZ, CH, DK1) for the country comparison page ("Länder"); job names carry the
+zone (`entsoe:load.actual:actual@FR`). That is 18 requests per ingest interval,
+well below the platform limit of 400 requests per minute.
 
 **Not verified live** – no token was available on 2026-10-18 (allowed by the spec).
 The fixtures in `backend/tests/fixtures/entsoe/` are constructed from the official
