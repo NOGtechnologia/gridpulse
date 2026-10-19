@@ -1,5 +1,9 @@
+import { join } from "node:path";
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
+
+// Playwright runs from frontend/ (package.json script and CI working directory).
+const FIXTURES = join(process.cwd(), "tests", "e2e", "fixtures");
 
 const PAGES = [
   { path: "/de", heading: "Lage" },
@@ -18,7 +22,16 @@ async function expectNoSeriousA11yViolations(page: Page): Promise<void> {
   const serious = results.violations.filter(
     (v) => v.impact === "serious" || v.impact === "critical",
   );
-  expect(serious.map((v) => `${v.id}: ${v.help} (${v.nodes.length})`)).toEqual([]);
+  // Element selectors in the message make CI failures diagnosable without a trace.
+  expect(
+    serious.map(
+      (v) =>
+        `${v.id}: ${v.help} (${v.nodes.length}): ${v.nodes
+          .slice(0, 5)
+          .map((n) => n.target.join(" "))
+          .join(" | ")}`,
+    ),
+  ).toEqual([]);
 }
 
 for (const { path, heading } of PAGES) {
@@ -99,7 +112,18 @@ test("kiosk is full screen without navigation", async ({ page }) => {
 });
 
 test.describe("visual regression", () => {
-  // Live numbers and charts are masked; layout, typography and colours are compared.
+  // The API is served from recorded fixtures (demo data, nothing stale): live data
+  // switches states such as "Veraltet" badges and value lengths, which made the
+  // baselines flaky. Numbers and charts are masked in addition.
+  test.beforeEach(async ({ page }) => {
+    await page.route("**/api/v1/**", async (route) => {
+      const name = new URL(route.request().url()).pathname
+        .replace("/api/v1/", "")
+        .replaceAll("/", "-");
+      await route.fulfill({ path: join(FIXTURES, `${name}.json`) });
+    });
+  });
+
   const masks = (page: Page) => [
     page.getByTestId("big-number"),
     page.getByRole("img"),
