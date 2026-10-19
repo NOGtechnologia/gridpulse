@@ -19,6 +19,8 @@ export default tseslint.config(
       ".api-check.ts",
       "*.config.mjs",
       "scripts/**",
+      // Vendored MapLibre worker copied by scripts/copy-maplibre-worker.mjs (gitignored).
+      "public/maplibre/**",
     ],
   },
   ...compat.extends("next/core-web-vitals"),
