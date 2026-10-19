@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+from collections.abc import Callable
 from dataclasses import replace
 from datetime import UTC, date, datetime, timedelta
 
@@ -18,11 +19,14 @@ from gridpulse.storage import migrate
 from gridpulse.storage.repository import (
     AlertChannel,
     EventQuery,
+    ModelRun,
     ObservationQuery,
     QueryResolution,
     SourceStatus,
 )
 from gridpulse.storage.sql import SqlRepository
+
+ModelRunFactory = Callable[..., ModelRun]
 
 pytestmark = pytest.mark.integration
 Q = timedelta(minutes=15)
@@ -57,13 +61,26 @@ async def _tables(url: str) -> set[str]:
 
 
 def test_migration_up_down_up(migrated_url: str) -> None:
-    assert {"observations", "events", "source_status", "api_keys"} <= asyncio.run(
+    assert {"observations", "events", "source_status", "api_keys", "model_runs"} <= asyncio.run(
         _tables(migrated_url)
     )
+    migrate.downgrade(migrated_url, "0001")
+    assert "model_runs" not in asyncio.run(_tables(migrated_url))
     migrate.downgrade(migrated_url, "base")
     assert "observations" not in asyncio.run(_tables(migrated_url))
     migrate.upgrade(migrated_url)
-    assert "observations" in asyncio.run(_tables(migrated_url))
+    assert {"observations", "model_runs"} <= asyncio.run(_tables(migrated_url))
+
+
+async def test_model_runs_roundtrip(repo: SqlRepository, model_run: ModelRunFactory) -> None:
+    assert await repo.latest_model_run() is None
+    first = model_run(T0, active=False, mape_model=None)
+    await repo.save_model_run(first)
+    await repo.save_model_run(model_run(T0 - timedelta(days=1), active=True))
+    latest = await repo.latest_model_run()
+    assert latest is not None
+    assert latest == replace(first, id=latest.id)
+    assert latest.features == ("weather.temperature_2m@WX:a", "hour")
 
 
 async def test_observations_is_hypertable(repo: SqlRepository) -> None:

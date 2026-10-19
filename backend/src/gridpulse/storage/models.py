@@ -91,3 +91,25 @@ api_keys = Table(
     Column("created_at", DateTime(timezone=True), nullable=False, server_default=func.now()),
     Column("revoked", Boolean, nullable=False, server_default="false"),
 )
+
+# Training/backtest runs of the own forecasting model (phase 7, ADR 0010).
+model_runs = Table(
+    "model_runs",
+    metadata,
+    Column("id", BigInteger, primary_key=True, autoincrement=True),
+    Column("trained_at", DateTime(timezone=True), nullable=False, index=True),
+    Column("algorithm", Text, nullable=False),
+    Column("seed", Integer, nullable=False),
+    Column("target", Text, nullable=False),
+    Column("features", Text, nullable=False),  # JSON array of feature names
+    Column("train_start", DateTime(timezone=True), nullable=False),
+    Column("train_end", DateTime(timezone=True), nullable=False),
+    Column("test_start", DateTime(timezone=True), nullable=False),
+    Column("test_end", DateTime(timezone=True), nullable=False),
+    Column("test_points", Integer, nullable=False),
+    Column("mae_model", Double, nullable=False),
+    Column("mape_model", Double),
+    Column("mae_official", Double, nullable=False),
+    Column("mape_official", Double),
+    Column("active", Boolean, nullable=False),
+)

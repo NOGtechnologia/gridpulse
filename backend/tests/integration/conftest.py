@@ -54,6 +54,7 @@ async def _reset(url: str) -> None:
             "source_status",
             "alert_channels",
             "api_keys",
+            "model_runs",
             "alembic_version",
         ):
             await conn.execute(text(f"DROP TABLE IF EXISTS {table} CASCADE"))
@@ -73,8 +74,8 @@ async def repo(migrated_url: str) -> AsyncIterator[SqlRepository]:
     async with repository.engine.begin() as conn:
         await conn.execute(
             text(
-                "TRUNCATE observations, events, source_status, alert_channels, api_keys "
-                "RESTART IDENTITY"
+                "TRUNCATE observations, events, source_status, alert_channels, api_keys, "
+                "model_runs RESTART IDENTITY"
             )
         )
     yield repository

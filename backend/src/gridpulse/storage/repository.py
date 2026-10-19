@@ -76,6 +76,28 @@ class AlertChannel:
     id: int | None = field(default=None, compare=False)
 
 
+@dataclass(frozen=True, slots=True)
+class ModelRun:
+    """One training + backtest run of the own forecasting model (ADR 0010)."""
+
+    trained_at: datetime
+    algorithm: str
+    seed: int
+    target: str
+    features: tuple[str, ...]
+    train_start: datetime
+    train_end: datetime
+    test_start: datetime
+    test_end: datetime
+    test_points: int
+    mae_model: float
+    mape_model: float | None  # None: no test hour above the MAPE floor
+    mae_official: float
+    mape_official: float | None
+    active: bool  # beats the official forecast -> shown in the outlook
+    id: int | None = field(default=None, compare=False)
+
+
 def hash_api_key(key: str) -> str:
     """API keys are stored as SHA-256 hashes only (spec 5.3)."""
     return hashlib.sha256(key.encode()).hexdigest()
@@ -126,6 +148,12 @@ class Repository(Protocol):
     async def add_api_key(self, name: str, key: str) -> None: ...
 
     async def is_valid_api_key(self, key: str) -> bool: ...
+
+    async def save_model_run(self, run: ModelRun) -> None: ...
+
+    async def latest_model_run(self) -> ModelRun | None:
+        """The most recently trained run (by ``trained_at``)."""
+        ...
 
     async def ping(self) -> bool: ...
 

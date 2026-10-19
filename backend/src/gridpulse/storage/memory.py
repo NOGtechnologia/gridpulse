@@ -15,6 +15,7 @@ from gridpulse.storage.repository import (
     OBS_RESULT_COLUMNS,
     AlertChannel,
     EventQuery,
+    ModelRun,
     ObservationQuery,
     QueryResolution,
     SourceStatus,
@@ -62,6 +63,7 @@ class MemoryRepository:
         self._status: dict[str, SourceStatus] = {}
         self._channels: list[AlertChannel] = []
         self._keys: dict[str, bool] = {}
+        self._model_runs: list[ModelRun] = []
 
     async def upsert_observations(self, frame: pd.DataFrame) -> int:
         if frame.empty:
@@ -151,6 +153,12 @@ class MemoryRepository:
 
     async def is_valid_api_key(self, key: str) -> bool:
         return self._keys.get(hash_api_key(key), False)
+
+    async def save_model_run(self, run: ModelRun) -> None:
+        self._model_runs.append(replace(run, id=len(self._model_runs) + 1))
+
+    async def latest_model_run(self) -> ModelRun | None:
+        return max(self._model_runs, key=lambda r: r.trained_at, default=None)
 
     async def ping(self) -> bool:
         return True

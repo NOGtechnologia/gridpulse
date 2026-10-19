@@ -22,6 +22,7 @@ dependencies = [
     "structlog>=24.4",
     "defusedxml>=0.7",
     "python-multipart>=0.0.18",
+    "scikit-learn>=1.6",
 ]
 
 [project.scripts]
@@ -87,7 +88,7 @@ packages = ["gridpulse"]
 
 [[tool.mypy.overrides]]
 # Third-party libraries without type information.
-module = ["apscheduler.*", "testcontainers.*", "pyarrow.*", "schemathesis.*"]
+module = ["apscheduler.*", "testcontainers.*", "pyarrow.*", "schemathesis.*", "sklearn.*"]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]

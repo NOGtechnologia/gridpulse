@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import json
 from collections.abc import Sequence
+from dataclasses import fields
 from datetime import UTC, datetime
 from typing import Any
 
@@ -14,11 +16,19 @@ from sqlalchemy.sql.elements import ColumnElement
 
 from gridpulse.domain.observations import iter_observations
 from gridpulse.domain.rules.model import Event, EventCategory, Severity
-from gridpulse.storage.models import alert_channels, api_keys, events, observations, source_status
+from gridpulse.storage.models import (
+    alert_channels,
+    api_keys,
+    events,
+    model_runs,
+    observations,
+    source_status,
+)
 from gridpulse.storage.repository import (
     OBS_RESULT_COLUMNS,
     AlertChannel,
     EventQuery,
+    ModelRun,
     ObservationQuery,
     QueryResolution,
     SourceStatus,
@@ -327,6 +337,24 @@ class SqlRepository:
         )
         async with self.engine.connect() as conn:
             return (await conn.execute(stmt)).first() is not None
+
+    # --- forecasting model runs ---------------------------------------------------------
+
+    async def save_model_run(self, run: ModelRun) -> None:
+        values = {f.name: getattr(run, f.name) for f in fields(ModelRun) if f.name not in {"id"}}
+        values["features"] = json.dumps(list(run.features))
+        async with self.engine.begin() as conn:
+            await conn.execute(insert(model_runs).values(values))
+
+    async def latest_model_run(self) -> ModelRun | None:
+        stmt = select(model_runs).order_by(model_runs.c.trained_at.desc()).limit(1)
+        async with self.engine.connect() as conn:
+            row = (await conn.execute(stmt)).mappings().first()
+        if row is None:
+            return None
+        data = dict(row)
+        data["features"] = tuple(json.loads(data["features"]))
+        return ModelRun(**data)
 
     async def ping(self) -> bool:
         try:
