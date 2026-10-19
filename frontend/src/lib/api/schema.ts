@@ -270,6 +270,11 @@ export interface components {
     ForecastPoint: {
       /** Load */
       load: number;
+      /**
+       * Model Residual Load
+       * @description Own model (hourly); only set while `model.active` is true
+       */
+      model_residual_load?: number | null;
       /** Official Residual Load */
       official_residual_load?: number | null;
       /** Residual Load */
@@ -287,6 +292,8 @@ export interface components {
     /** ForecastResponse */
     ForecastResponse: {
       meta: components["schemas"]["Meta"];
+      /** @description Own forecasting model (phase 7); null until a backtest ran */
+      model?: components["schemas"]["ModelBacktest"] | null;
       /** Points */
       points: components["schemas"]["ForecastPoint"][];
       /**
@@ -414,6 +421,68 @@ export interface components {
     MetricsCatalog: {
       /** Data */
       data: components["schemas"]["MetricOut"][];
+    };
+    /**
+     * ModelBacktest
+     * @description Latest backtest of the own model against the official forecast (always reported).
+     */
+    ModelBacktest: {
+      /**
+       * Active
+       * @description True when the model beats the official forecast on MAE and MAPE
+       */
+      active: boolean;
+      /** Algorithm */
+      algorithm: string;
+      /** Features */
+      features: string[];
+      /** Mae Model */
+      mae_model: number;
+      /** Mae Official */
+      mae_official: number;
+      /**
+       * Mape Model
+       * @description Percent; hours with |actual| >= 1000 MW only
+       */
+      mape_model: number | null;
+      /** Mape Official */
+      mape_official: number | null;
+      /** Seed */
+      seed: number;
+      /** Target */
+      target: string;
+      /**
+       * Test End
+       * Format: date-time
+       */
+      test_end: string;
+      /** Test Points */
+      test_points: number;
+      /**
+       * Test Start
+       * Format: date-time
+       */
+      test_start: string;
+      /**
+       * Train End
+       * Format: date-time
+       */
+      train_end: string;
+      /**
+       * Train Start
+       * Format: date-time
+       */
+      train_start: string;
+      /**
+       * Trained At
+       * Format: date-time
+       */
+      trained_at: string;
+      /**
+       * Unit
+       * @default MW
+       */
+      unit: string;
     };
     /** ObservationOut */
     ObservationOut: {

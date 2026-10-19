@@ -19,7 +19,7 @@ generated from the code and committed as [`docs/openapi.json`](openapi.json)
 |---|---|---|
 | GET | `/api/v1/observations` | time series, filters + pagination |
 | GET | `/api/v1/summary/now` | live situation |
-| GET | `/api/v1/forecast/residual-load` | residual load outlook + notice windows |
+| GET | `/api/v1/forecast/residual-load` | residual load outlook + notice windows; `model` = latest backtest of the own model (see [forecasting.md](forecasting.md)), `model_residual_load` only while it beats the official forecast |
 | GET | `/api/v1/events` | detected events |
 | GET | `/api/v1/sources/status` | data quality per source |
 | GET | `/api/v1/metrics` | metric catalogue (units, colours) |

@@ -98,6 +98,32 @@ class ForecastPoint(Model):
     solar: float
     residual_load: float
     official_residual_load: float | None = None
+    model_residual_load: float | None = Field(
+        default=None, description="Own model (hourly); only set while `model.active` is true"
+    )
+
+
+class ModelBacktest(Model):
+    """Latest backtest of the own model against the official forecast (always reported)."""
+
+    trained_at: datetime
+    algorithm: str
+    seed: int
+    target: str
+    features: list[str]
+    train_start: datetime
+    train_end: datetime
+    test_start: datetime
+    test_end: datetime
+    test_points: int
+    unit: str = "MW"
+    mae_model: float
+    mape_model: float | None = Field(description="Percent; hours with |actual| >= 1000 MW only")
+    mae_official: float
+    mape_official: float | None
+    active: bool = Field(
+        description="True when the model beats the official forecast on MAE and MAPE"
+    )
 
 
 class OutlookWindow(Model):
@@ -113,6 +139,9 @@ class ForecastResponse(Model):
     unit: str = "MW"
     points: list[ForecastPoint]
     windows: list[OutlookWindow]
+    model: ModelBacktest | None = Field(
+        default=None, description="Own forecasting model (phase 7); null until a backtest ran"
+    )
 
 
 class EventOut(Model):

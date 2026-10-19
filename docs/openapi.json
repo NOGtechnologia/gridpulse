@@ -222,6 +222,18 @@
             "title": "Load",
             "type": "number"
           },
+          "model_residual_load": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Own model (hourly); only set while `model.active` is true",
+            "title": "Model Residual Load"
+          },
           "official_residual_load": {
             "anyOf": [
               {
@@ -266,6 +278,17 @@
         "properties": {
           "meta": {
             "$ref": "#/components/schemas/Meta"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ModelBacktest"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Own forecasting model (phase 7); null until a backtest ran"
           },
           "points": {
             "items": {
@@ -568,6 +591,120 @@
           "data"
         ],
         "title": "MetricsCatalog",
+        "type": "object"
+      },
+      "ModelBacktest": {
+        "additionalProperties": false,
+        "description": "Latest backtest of the own model against the official forecast (always reported).",
+        "properties": {
+          "active": {
+            "description": "True when the model beats the official forecast on MAE and MAPE",
+            "title": "Active",
+            "type": "boolean"
+          },
+          "algorithm": {
+            "title": "Algorithm",
+            "type": "string"
+          },
+          "features": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Features",
+            "type": "array"
+          },
+          "mae_model": {
+            "title": "Mae Model",
+            "type": "number"
+          },
+          "mae_official": {
+            "title": "Mae Official",
+            "type": "number"
+          },
+          "mape_model": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Percent; hours with |actual| >= 1000 MW only",
+            "title": "Mape Model"
+          },
+          "mape_official": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mape Official"
+          },
+          "seed": {
+            "title": "Seed",
+            "type": "integer"
+          },
+          "target": {
+            "title": "Target",
+            "type": "string"
+          },
+          "test_end": {
+            "format": "date-time",
+            "title": "Test End",
+            "type": "string"
+          },
+          "test_points": {
+            "title": "Test Points",
+            "type": "integer"
+          },
+          "test_start": {
+            "format": "date-time",
+            "title": "Test Start",
+            "type": "string"
+          },
+          "train_end": {
+            "format": "date-time",
+            "title": "Train End",
+            "type": "string"
+          },
+          "train_start": {
+            "format": "date-time",
+            "title": "Train Start",
+            "type": "string"
+          },
+          "trained_at": {
+            "format": "date-time",
+            "title": "Trained At",
+            "type": "string"
+          },
+          "unit": {
+            "default": "MW",
+            "title": "Unit",
+            "type": "string"
+          }
+        },
+        "required": [
+          "trained_at",
+          "algorithm",
+          "seed",
+          "target",
+          "features",
+          "train_start",
+          "train_end",
+          "test_start",
+          "test_end",
+          "test_points",
+          "mae_model",
+          "mape_model",
+          "mae_official",
+          "mape_official",
+          "active"
+        ],
+        "title": "ModelBacktest",
         "type": "object"
       },
       "ObservationOut": {

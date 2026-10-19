@@ -11,9 +11,16 @@ from gridpulse.domain.indicators import dunkelflaute_windows, negative_price_win
 from gridpulse.domain.metrics import Kind, MetricId
 from gridpulse.domain.residual_load import residual_load
 from gridpulse.domain.rules.config import RuleConfig
-from gridpulse.schemas import ForecastPoint, ForecastResponse, Meta, OutlookWindow
+from gridpulse.schemas import (
+    ForecastPoint,
+    ForecastResponse,
+    Meta,
+    ModelBacktest,
+    OutlookWindow,
+)
+from gridpulse.services.model_forecast import MODEL_SOURCE
 from gridpulse.services.series import best_source, fetch_frame, pick_series
-from gridpulse.storage.repository import Repository
+from gridpulse.storage.repository import ModelRun, Repository
 
 Q = timedelta(minutes=15)
 FORECAST_METRICS = [
@@ -99,7 +106,22 @@ async def build_forecast(
                     detail=f"min {low:.2f} EUR/MWh",
                 )
             )
-    sources = "|".join(s for s in (source, price_source) if s) or "none"
+    run = await repo.latest_model_run()
+    model_source = None
+    if run is not None and run.active and points:
+        model_frame = await fetch_frame(
+            repo, [MetricId.LOAD_RESIDUAL], start, end, kind=Kind.FORECAST, sources=[MODEL_SOURCE]
+        )
+        model = pick_series(model_frame, MetricId.LOAD_RESIDUAL)
+        if not model.empty:
+            model_source = MODEL_SOURCE
+            points = [
+                p.model_copy(update={"model_residual_load": float(model.loc[pd.Timestamp(p.ts)])})
+                if pd.Timestamp(p.ts) in model.index
+                else p
+                for p in points
+            ]
+    sources = "|".join(s for s in (source, price_source, model_source) if s) or "none"
     lic, attr = license_for(sources)
     return ForecastResponse(
         meta=Meta(
@@ -107,4 +129,25 @@ async def build_forecast(
         ),
         points=points,
         windows=sorted(windows, key=lambda w: w.start),
+        model=_backtest_out(run) if run is not None else None,
+    )
+
+
+def _backtest_out(run: ModelRun) -> ModelBacktest:
+    return ModelBacktest(
+        trained_at=run.trained_at,
+        algorithm=run.algorithm,
+        seed=run.seed,
+        target=run.target,
+        features=list(run.features),
+        train_start=run.train_start,
+        train_end=run.train_end,
+        test_start=run.test_start,
+        test_end=run.test_end,
+        test_points=run.test_points,
+        mae_model=run.mae_model,
+        mape_model=run.mape_model,
+        mae_official=run.mae_official,
+        mape_official=run.mape_official,
+        active=run.active,
     )
