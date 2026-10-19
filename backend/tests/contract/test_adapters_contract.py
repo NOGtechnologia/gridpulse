@@ -223,6 +223,20 @@ def test_open_meteo_parse(load_fixture: Loader, metric: MetricId) -> None:
     assert set(frame["kind"]) == {"forecast"}
 
 
+def test_open_meteo_past_days_drops_null_history(load_fixture: Loader) -> None:
+    """past_days=92 returns null for hours older than the ~2 months the API keeps."""
+    raw = load_fixture("open_meteo", "forecast_past_days.json")
+    temps = raw["hourly"]["temperature_2m"]
+    frame = OpenMeteoAdapter(FETCHER).parse(
+        _payload("open_meteo", MetricId.WEATHER_TEMPERATURE, [raw], locations=["hamburg"])
+    )
+    validate_frame(frame)
+    assert temps[0] is None
+    assert len(frame) == sum(v is not None for v in temps) > 24 * 50
+    assert frame["value"].notna().all()
+    assert set(frame["area"]) == {weather_area("hamburg")}
+
+
 def test_open_meteo_rejects_location_mismatch_and_non_utc(load_fixture: Loader) -> None:
     raw = load_fixture("open_meteo", "forecast_multi.json")
     adapter = OpenMeteoAdapter(FETCHER)

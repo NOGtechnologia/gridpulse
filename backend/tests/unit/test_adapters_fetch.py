@@ -231,8 +231,15 @@ async def test_open_meteo_fetch(client: httpx.AsyncClient, load_fixture: Loader)
     payload = await adapter.fetch(
         MetricId.WEATHER_TEMPERATURE, now - timedelta(days=2), now + timedelta(days=3)
     )
-    assert route.calls[0].request.url.params["latitude"] == "1.0,3.0,5.0"
+    params = route.calls[0].request.url.params
+    assert params["latitude"] == "1.0,3.0,5.0"
+    assert params["past_days"] == "3"
     assert set(adapter.parse(payload)["area"]) == {"WX:a", "WX:b", "WX:c"}
+    # History for the forecasting model: past_days follows the window, capped at the API's 92.
+    await adapter.fetch(MetricId.WEATHER_TEMPERATURE, now - timedelta(days=400), now)
+    assert route.calls[1].request.url.params["past_days"] == "92"
+    await adapter.fetch(MetricId.WEATHER_TEMPERATURE, now, now + timedelta(hours=1))
+    assert route.calls[2].request.url.params["past_days"] == "1"
     with pytest.raises(UnsupportedMetricError):
         await adapter.fetch(MetricId.LOAD_ACTUAL, now, now)
     assert MetricId.WEATHER_TEMPERATURE in adapter.supported_metrics()

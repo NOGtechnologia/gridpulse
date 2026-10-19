@@ -19,6 +19,7 @@ from gridpulse.domain.observations import concat_frames, make_frame
 from gridpulse.domain.timeutils import ensure_utc
 
 BASE_URL = "https://api.open-meteo.com/v1/forecast"
+MAX_PAST_DAYS = 92
 
 VARIABLES: dict[MetricId, str] = {
     MetricId.WEATHER_TEMPERATURE: "temperature_2m",
@@ -66,14 +67,17 @@ class OpenMeteoAdapter:
         if metric not in VARIABLES:
             raise UnsupportedMetricError(f"open_meteo does not provide {metric}")
         start, end = ensure_utc(start), ensure_utc(end)
-        days = max(1, min(16, int((end - datetime.now(UTC)) / timedelta(days=1)) + 1))
+        now = datetime.now(UTC)
+        day = timedelta(days=1)
         params = {
             "latitude": ",".join(f"{loc.lat}" for loc in self.locations),
             "longitude": ",".join(f"{loc.lon}" for loc in self.locations),
             "hourly": ",".join(VARIABLES.values()),
             "timezone": "UTC",
-            "past_days": 1,
-            "forecast_days": days,
+            # API limits: past_days <= 92 (only ~2 months are kept, older hours are null),
+            # forecast_days <= 16.
+            "past_days": max(1, min(MAX_PAST_DAYS, int((now - start) / day) + 1)),
+            "forecast_days": max(1, min(16, int((end - now) / day) + 1)),
         }
         doc = await self._fetcher.get_json(BASE_URL, params)
         return RawPayload(

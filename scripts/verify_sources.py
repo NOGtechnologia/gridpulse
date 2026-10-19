@@ -176,6 +176,24 @@ def _probes(now: datetime) -> list[Probe]:
             ["hourly", "hourly_units"],
             count_key="hourly",
         ),
+        # History for the forecasting model (phase 7): the forecast API keeps roughly two
+        # months of past hours; older hours within past_days come back as null.
+        Probe(
+            "open_meteo",
+            "forecast_past_days",
+            "https://api.open-meteo.com/v1/forecast",
+            {
+                "latitude": "53.55",
+                "longitude": "9.99",
+                "hourly": "temperature_2m,wind_speed_100m,shortwave_radiation,cloud_cover",
+                "timezone": "UTC",
+                "past_days": 92,
+                "forecast_days": 1,
+            },
+            ["hourly", "hourly_units"],
+            count_key="hourly",
+            mandatory=False,
+        ),
     ]
     token = os.environ.get("GRIDPULSE_ENTSOE_TOKEN")
     if token:
