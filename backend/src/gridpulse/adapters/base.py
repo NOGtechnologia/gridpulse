@@ -14,7 +14,7 @@ import pandas as pd
 
 from gridpulse.domain.metrics import MetricId
 
-USER_AGENT = "GridPulse/0.1 (+https://github.com/gridpulse/gridpulse)"
+USER_AGENT = "GridPulse/0.1 (+https://github.com/NOGtechnologia/gridpulse)"
 
 
 @dataclass(frozen=True, slots=True)

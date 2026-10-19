@@ -117,4 +117,4 @@ Open-Meteo returns `null` for past hours older than ~2 months (dropped, document
 2. Configure `GRIDPULSE_ENTSOE_TOKEN` (repo secret + `.env`), re-record ENTSO-E fixtures and check the populated country comparison against live data.
 3. First nightly mutation run – raise tests if the score is < 80 % (now includes `domain/calendar.py` and `domain/scores.py`).
 4. Forecasting model: improve features (capacity-weighted weather points, longer history, archived day-ahead weather for an honest backtest) – see [forecasting.md](forecasting.md).
-5. Replace the placeholder organisation `github.com/gridpulse/gridpulse` in README/NOTICE/workflows with the real repository URL.
+5. ~~Replace the placeholder organisation~~ – done: repository is `github.com/NOGtechnologia/gridpulse`, images `ghcr.io/nogtechnologia/gridpulse-{backend,web}` (the release workflow lower-cases the owner, as registry paths must be lower case).

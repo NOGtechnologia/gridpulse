@@ -37,7 +37,7 @@ services:
   worker:
     <<: *hardening
     build: ../backend
-    image: ghcr.io/gridpulse/gridpulse-backend:${GRIDPULSE_VERSION:-dev}
+    image: ghcr.io/nogtechnologia/gridpulse-backend:${GRIDPULSE_VERSION:-dev}
     command: ["gridpulse-worker"]
     environment: *backend-env
     tmpfs: ["/tmp"]
@@ -53,7 +53,7 @@ services:
   api:
     <<: *hardening
     build: ../backend
-    image: ghcr.io/gridpulse/gridpulse-backend:${GRIDPULSE_VERSION:-dev}
+    image: ghcr.io/nogtechnologia/gridpulse-backend:${GRIDPULSE_VERSION:-dev}
     command: ["gridpulse-api"]
     environment: *backend-env
     tmpfs: ["/tmp"]
@@ -66,7 +66,7 @@ services:
   web:
     <<: *hardening
     build: ../frontend
-    image: ghcr.io/gridpulse/gridpulse-web:${GRIDPULSE_VERSION:-dev}
+    image: ghcr.io/nogtechnologia/gridpulse-web:${GRIDPULSE_VERSION:-dev}
     environment:
       GRIDPULSE_API_URL: http://api:8000
       GRIDPULSE_ADMIN_TOKEN: ${GRIDPULSE_ADMIN_TOKEN:-}

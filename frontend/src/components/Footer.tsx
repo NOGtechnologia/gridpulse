@@ -42,7 +42,7 @@ export function Footer() {
         <p>
           <a
             className="underline hover:text-fg"
-            href="https://github.com/gridpulse/gridpulse"
+            href="https://github.com/NOGtechnologia/gridpulse"
             rel="noreferrer"
           >
             {t("code")}

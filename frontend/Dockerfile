@@ -13,7 +13,7 @@ RUN pnpm run build
 FROM node:22.23.3-slim AS runtime
 LABEL org.opencontainers.image.title="gridpulse-web" \
       org.opencontainers.image.licenses="Apache-2.0" \
-      org.opencontainers.image.source="https://github.com/gridpulse/gridpulse"
+      org.opencontainers.image.source="https://github.com/NOGtechnologia/gridpulse"
 ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 PORT=3000 HOSTNAME=0.0.0.0
 WORKDIR /app
 COPY --from=build --chown=root:root /app/.next/standalone ./

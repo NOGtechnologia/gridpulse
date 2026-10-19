@@ -18,7 +18,7 @@ FROM python:3.12.15-slim-trixie AS runtime
 LABEL org.opencontainers.image.title="gridpulse-backend" \
       org.opencontainers.image.description="GridPulse API and worker" \
       org.opencontainers.image.licenses="Apache-2.0" \
-      org.opencontainers.image.source="https://github.com/gridpulse/gridpulse"
+      org.opencontainers.image.source="https://github.com/NOGtechnologia/gridpulse"
 RUN groupadd --system --gid 10001 gridpulse \
     && useradd --system --uid 10001 --gid gridpulse --no-create-home --shell /usr/sbin/nologin gridpulse
 WORKDIR /app

@@ -30,7 +30,7 @@ import httpx
 
 ROOT = Path(__file__).resolve().parent.parent
 FIXTURES = ROOT / "backend" / "tests" / "fixtures"
-USER_AGENT = "GridPulse/0.1 (+https://github.com/gridpulse/gridpulse; verify_sources)"
+USER_AGENT = "GridPulse/0.1 (+https://github.com/NOGtechnologia/gridpulse; verify_sources)"
 SMARD = "https://www.smard.de/app/chart_data"
 EC = "https://api.energy-charts.info"
 

@@ -3,11 +3,11 @@
 **Open-source situational picture of the German and European power grid – built
 exclusively from public, official data sources.**
 
-[![ci](https://github.com/gridpulse/gridpulse/actions/workflows/ci.yml/badge.svg)](https://github.com/gridpulse/gridpulse/actions/workflows/ci.yml)
-[![e2e](https://github.com/gridpulse/gridpulse/actions/workflows/e2e.yml/badge.svg)](https://github.com/gridpulse/gridpulse/actions/workflows/e2e.yml)
+[![ci](https://github.com/NOGtechnologia/gridpulse/actions/workflows/ci.yml/badge.svg)](https://github.com/NOGtechnologia/gridpulse/actions/workflows/ci.yml)
+[![e2e](https://github.com/NOGtechnologia/gridpulse/actions/workflows/e2e.yml/badge.svg)](https://github.com/NOGtechnologia/gridpulse/actions/workflows/e2e.yml)
 [![coverage](https://img.shields.io/badge/coverage-%E2%89%A590%25%20(domain%20100%25)-brightgreen)](docs/progress.md)
 [![license](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
-[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/gridpulse/gridpulse/badge)](https://securityscorecards.dev/viewer/?uri=github.com/gridpulse/gridpulse)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/NOGtechnologia/gridpulse/badge)](https://securityscorecards.dev/viewer/?uri=github.com/NOGtechnologia/gridpulse)
 
 > *"How is the grid doing right now, what is coming in the next 24–48 hours, and is
 > anything unusual?"*
@@ -22,7 +22,7 @@ exclusively from public, official data sources.**
 ## Quick start
 
 ```bash
-git clone https://github.com/gridpulse/gridpulse.git && cd gridpulse
+git clone https://github.com/NOGtechnologia/gridpulse.git && cd gridpulse
 cp .env.example .env
 GRIDPULSE_DEMO=1 docker compose -f deploy/docker-compose.yml up -d   # offline demo data
 # or with live data from SMARD and Energy-Charts:
