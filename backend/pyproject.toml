@@ -1,6 +1,6 @@
 [project]
 name = "gridpulse"
-version = "0.1.0"
+version = "1.0.0"
 description = "Open-source grid situational awareness dashboard built on public, official data sources."
 license = "Apache-2.0"
 requires-python = ">=3.12,<3.13"
