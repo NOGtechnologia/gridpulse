@@ -42,14 +42,18 @@ test("situation shows numbers with unit, source and data age", async ({ page }) 
 test("country comparison shows zones or explains the missing ENTSO-E token", async ({ page }) => {
   await page.goto("/de/countries");
   // Without GRIDPULSE_ENTSOE_TOKEN (demo stack, forks) the page must explain why it is empty.
-  const emptyState = page.getByRole("heading", { name: "Keine ENTSO-E-Daten" });
-  const france = page.getByRole("heading", { name: "Frankreich (FR)" });
-  await expect(emptyState.or(france)).toBeVisible();
-  if (await emptyState.isVisible()) {
-    await expect(page.getByText(/GRIDPULSE_ENTSOE_TOKEN/)).toBeVisible();
+  // Zone tiles are already rendered (as skeletons) while loading, so wait for content
+  // that only exists once the data has arrived: the token hint or a tile footer.
+  const tokenHint = page.getByText(/GRIDPULSE_ENTSOE_TOKEN/);
+  const france = page.locator("section", {
+    has: page.getByRole("heading", { name: "Frankreich (FR)" }),
+  });
+  const franceSource = france.getByText(/Quelle:/);
+  await expect(tokenHint.or(franceSource)).toBeVisible();
+  if (await tokenHint.isVisible()) {
+    await expect(page.getByRole("heading", { name: "Keine ENTSO-E-Daten" })).toBeVisible();
   } else {
-    const tile = page.locator("section", { has: france });
-    await expect(tile.getByText(/Quelle:/)).toBeVisible();
+    await expect(france.getByTestId("big-number").first()).toContainText("MW");
   }
 });
 

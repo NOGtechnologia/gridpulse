@@ -164,7 +164,7 @@ function ZoneTile({
       error={error}
       onRetry={onRetry}
       empty={!loading && !hasData}
-      provenance={provenance}
+      provenance={hasData ? provenance : undefined}
     >
       {hasData ? (
         <dl className="grid grid-cols-2 gap-2 text-sm">
