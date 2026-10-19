@@ -106,6 +106,8 @@ test.describe("visual regression", () => {
     page.locator("time"),
     page.locator("table"),
     page.locator("[aria-live]"),
+    // The border-flow map renders live values as labels on a canvas.
+    page.getByRole("figure"),
   ];
 
   test("dashboard (dark)", async ({ page }) => {
