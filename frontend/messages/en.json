@@ -7,6 +7,7 @@
   "nav": {
     "situation": "Situation",
     "outlook": "Outlook",
+    "countries": "Countries",
     "events": "Events",
     "history": "History",
     "status": "Status",
@@ -115,6 +116,27 @@
     "dunkelflaute": "Dunkelflaute risk",
     "windowText": "{start} to {end} ({hours} h) – {detail}",
     "basis": "Based on the official forecasts of the data sources. No custom model active."
+  },
+  "countries": {
+    "title": "Country comparison",
+    "intro": "Load and day-ahead price per bidding zone (Germany and its neighbours) from the ENTSO-E Transparency Platform, hourly means.",
+    "priceChart": "Day-ahead prices per bidding zone (−24 h to +24 h)",
+    "loadChart": "Load per bidding zone (last 24 h)",
+    "priceMean": "Mean price in window: {value}",
+    "emptyTitle": "No ENTSO-E data",
+    "emptyToken": "The country comparison needs data from the ENTSO-E Transparency Platform. Set a personal security token in the environment variable GRIDPULSE_ENTSOE_TOKEN (free after registration; request it by e-mail to transparency@entsoe.eu).",
+    "emptyHint": "Without a token GridPulse keeps running on SMARD, Energy-Charts and Open-Meteo. Once the token is set, the worker loads the data on its next run (every 15 min).",
+    "zones": {
+      "DE-LU": "Germany/Luxembourg",
+      "FR": "France",
+      "NL": "Netherlands",
+      "BE": "Belgium",
+      "AT": "Austria",
+      "PL": "Poland",
+      "CZ": "Czechia",
+      "CH": "Switzerland",
+      "DK1": "Denmark West"
+    }
   },
   "events": {
     "title": "Events",

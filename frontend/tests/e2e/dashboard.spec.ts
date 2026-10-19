@@ -4,6 +4,7 @@ import { expect, test, type Page } from "@playwright/test";
 const PAGES = [
   { path: "/de", heading: "Lage" },
   { path: "/de/outlook", heading: "Ausblick" },
+  { path: "/de/countries", heading: "Ländervergleich" },
   { path: "/de/events", heading: "Ereignisse" },
   { path: "/de/history", heading: "Historie" },
   { path: "/de/status", heading: "Datenqualität" },
@@ -36,6 +37,20 @@ test("situation shows numbers with unit, source and data age", async ({ page }) 
   await expect(load.getByText(/Quelle:/)).toBeVisible();
   await expect(load.getByText(/Datenstand:/)).toBeVisible();
   await expect(page.getByRole("note")).toContainText("ersetzt keine zertifizierten Leitsysteme");
+});
+
+test("country comparison shows zones or explains the missing ENTSO-E token", async ({ page }) => {
+  await page.goto("/de/countries");
+  // Without GRIDPULSE_ENTSOE_TOKEN (demo stack, forks) the page must explain why it is empty.
+  const emptyState = page.getByRole("heading", { name: "Keine ENTSO-E-Daten" });
+  const france = page.getByRole("heading", { name: "Frankreich (FR)" });
+  await expect(emptyState.or(france)).toBeVisible();
+  if (await emptyState.isVisible()) {
+    await expect(page.getByText(/GRIDPULSE_ENTSOE_TOKEN/)).toBeVisible();
+  } else {
+    const tile = page.locator("section", { has: france });
+    await expect(tile.getByText(/Quelle:/)).toBeVisible();
+  }
 });
 
 test("keyboard navigation reaches the main menu via skip link", async ({ page }) => {

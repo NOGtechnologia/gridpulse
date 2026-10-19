@@ -7,6 +7,7 @@
   "nav": {
     "situation": "Lage",
     "outlook": "Ausblick",
+    "countries": "Länder",
     "events": "Ereignisse",
     "history": "Historie",
     "status": "Status",
@@ -115,6 +116,27 @@
     "dunkelflaute": "Dunkelflaute-Risiko",
     "windowText": "{start} bis {end} ({hours} h) – {detail}",
     "basis": "Grundlage: offizielle Prognosen der Datenquellen. Kein eigenes Modell aktiv."
+  },
+  "countries": {
+    "title": "Ländervergleich",
+    "intro": "Netzlast und Day-Ahead-Preis je Gebotszone (Deutschland und Nachbarn) aus der ENTSO-E Transparency Platform, stündliche Mittelwerte.",
+    "priceChart": "Day-Ahead-Preise je Gebotszone (−24 h bis +24 h)",
+    "loadChart": "Netzlast je Gebotszone (letzte 24 h)",
+    "priceMean": "Ø Preis im Zeitfenster: {value}",
+    "emptyTitle": "Keine ENTSO-E-Daten",
+    "emptyToken": "Der Ländervergleich benötigt Daten der ENTSO-E Transparency Platform. Dafür muss ein persönliches Security Token in der Umgebungsvariable GRIDPULSE_ENTSOE_TOKEN gesetzt sein (kostenlos nach Registrierung, Anfrage per E-Mail an transparency@entsoe.eu).",
+    "emptyHint": "Ohne Token läuft GridPulse unverändert mit SMARD, Energy-Charts und Open-Meteo weiter. Nach dem Setzen des Tokens lädt der Worker die Daten beim nächsten Abruf (Intervall 15 min).",
+    "zones": {
+      "DE-LU": "Deutschland/Luxemburg",
+      "FR": "Frankreich",
+      "NL": "Niederlande",
+      "BE": "Belgien",
+      "AT": "Österreich",
+      "PL": "Polen",
+      "CZ": "Tschechien",
+      "CH": "Schweiz",
+      "DK1": "Dänemark West"
+    }
   },
   "events": {
     "title": "Ereignisse",

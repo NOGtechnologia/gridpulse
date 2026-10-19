@@ -7,6 +7,7 @@ import { FlowsMap, FlowsTable, flowLabel } from "@/components/situation/FlowsMap
 import { SituationView } from "@/components/situation/SituationView";
 import { licenseFor, provenanceOf } from "@/components/situation/tiles";
 import { Tile } from "@/components/Tile";
+import { CountriesView } from "@/components/views/CountriesView";
 import { EventsView, TestAlertButton } from "@/components/views/EventsView";
 import { defaultQuery, HistoryView } from "@/components/views/HistoryView";
 import { KioskView } from "@/components/views/KioskView";
@@ -305,6 +306,52 @@ describe("other views", () => {
     expect(document.documentElement.classList.contains("kiosk")).toBe(true);
     unmount();
     expect(document.documentElement.classList.contains("kiosk")).toBe(false);
+  });
+});
+
+describe("CountriesView", () => {
+  const now = new Date("2026-10-18T12:30:00Z");
+  const row = (area: string, metric: string, ts: string, value: number) => ({
+    ts,
+    metric,
+    area,
+    kind: "actual",
+    source: "entsoe",
+    unit: metric === "load.actual" ? "MW" : "EUR/MWh",
+    value,
+  });
+
+  it("shows load and price per bidding zone with unit, source and age", async () => {
+    const fetchMock = mockFetch({
+      "/api/v1/observations": {
+        meta: { ...meta, source: "entsoe", license: "ENTSO-E T&C" },
+        data: [
+          row("FR", "load.actual", "2026-10-18T11:00:00Z", 52000),
+          row("FR", "price.day_ahead", "2026-10-18T12:00:00Z", -12.5),
+          row("FR", "price.day_ahead", "2026-10-19T12:00:00Z", 40),
+          row("DE-LU", "load.actual", "2026-10-18T06:00:00Z", 60000),
+        ],
+      },
+    });
+    renderIntl(<CountriesView now={now} />);
+    expect(await screen.findByText("52.000 MW")).toBeInTheDocument();
+    expect(screen.getByText("-12,50 €/MWh")).toBeInTheDocument();
+    expect(screen.getByText("Negativer Preis")).toBeInTheDocument();
+    expect(screen.getByText("Frankreich (FR)")).toBeInTheDocument();
+    expect(screen.getAllByText(/Lizenz: ENTSO-E T&C/).length).toBeGreaterThan(2);
+    // DE-LU load is 6.5 h old -> marked stale; zones without data show the empty state.
+    expect(screen.getAllByText(/Veraltet/).length).toBe(1);
+    expect(screen.getAllByText("Keine Daten verfügbar.").length).toBe(7);
+    const url = (fetchMock.mock.calls[0]?.[0] as Request).url;
+    expect(url).toContain("source=entsoe");
+    expect(url).toContain("area=DK1");
+  });
+
+  it("explains the missing ENTSO-E token when there is no data", async () => {
+    mockFetch({ "/api/v1/observations": { meta: { ...meta, source: "none" }, data: [] } });
+    renderIntl(<CountriesView now={now} />, "en");
+    expect(await screen.findByText("No ENTSO-E data")).toBeInTheDocument();
+    expect(screen.getByText(/GRIDPULSE_ENTSOE_TOKEN/)).toBeInTheDocument();
   });
 });
 
