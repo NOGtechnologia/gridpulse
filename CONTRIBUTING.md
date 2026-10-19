@@ -30,6 +30,24 @@ Windows without `make`: `uv run --project backend python scripts/tasks.py check`
 - UI texts go through `next-intl` (`frontend/messages/{de,en}.json`), no hard-coded strings.
 - Significant decisions are recorded as ADRs (`docs/adr/`, MADR format).
 
+## Lighthouse locally
+
+CI runs `pnpm run lhci` against the compose stack (`frontend/lighthouserc.json`).
+Locally, start the production build (`pnpm build && pnpm start`) with an API behind
+it, then run `pnpm --dir frontend lhci` (needs Chrome, or set `CHROME_PATH`).
+
+If Chrome cannot be launched (e.g. Windows Server: `spawn UNKNOWN`), start
+Playwright's headless shell yourself and let Lighthouse attach to it:
+
+```bash
+chrome-headless-shell --remote-debugging-port=9222 about:blank
+pnpm --dir frontend exec lhci collect --settings.port=9222
+pnpm --dir frontend exec lhci assert
+```
+
+Tiles reserve their final height while loading (`Tile skeletonHeight`) – keep
+it in sync when a chart height changes, otherwise CLS breaks the performance score.
+
 ## API changes
 
 The OpenAPI file is generated: change the code, then run `make openapi` and

@@ -23,6 +23,7 @@ Actions but could not run locally.
 | Licence checks (Python allow-list, npm `license-checker`) | passed |
 | gitleaks over the full git history | no leaks |
 | Playwright E2E (Chromium) incl. axe dark + light, against **live data** | 14 passed (visual regression excluded, baselines are generated in CI) |
+| Lighthouse CI (desktop, 4 pages × 3 runs, local) | all assertions passed (perf ≥ 0.98, a11y 1.00, best practices 1.00) |
 | `scripts/verify_sources.py` (live) | SMARD, Energy-Charts, Open-Meteo (incl. `past_days` history) OK; ENTSO-E skipped (no token) |
 | `scripts/train_forecast.py` (live backfill, 92 days) | runs; own model MAE 5 060 MW vs. official 1 722 MW → not shown ([forecasting.md](forecasting.md)); report reproducible byte for byte |
 
@@ -65,11 +66,11 @@ Open-Meteo returns `null` for past hours older than ~2 months (dropped, document
 - [x] Pagination, filters, rate limit, optional hashed API keys, configurable CORS
 - [x] OpenAPI generated and drift-checked in `make build`; Schemathesis green; examples in `docs/api.md`
 
-### Phase 4 – Frontend ✅ (Lighthouse/visual baselines: *CI only*)
+### Phase 4 – Frontend ✅ (visual baselines: *CI only*)
 - [x] Pages Lage, Ausblick, Ereignisse, Historie, Status, Kiosk; component library; theme; DE/EN
 - [x] Typed API client generated from OpenAPI (`openapi-typescript` + `openapi-fetch`)
 - [x] Vitest coverage ≥ 80 % (96.5 %); axe 0 serious/critical (verified, dark + light)
-- [ ] Lighthouse ≥ 90/95/95 – configured in `e2e.yml` (`lighthouserc.json`), **not run locally**
+- [x] Lighthouse ≥ 90/95/95 – verified locally 2026-10-19 (desktop preset, 3 runs each, production build, live data): `/de`, `/de/outlook`, `/de/countries`, `/de/kiosk` all ≥ 0.98 / 1.00 / 1.00. The first run failed on `/de` (0.78) and `/de/outlook` (0.85) because of layout shift (CLS 0.57 / 0.29); tiles now reserve their final height while loading (CLS ≤ 0.06). The populated country view (needs ENTSO-E token) was not measured
 - [ ] Visual regression baselines – tests written (masked dynamic values, 0.2 %); baselines must be generated once in CI (`e2e.yml` → *Run workflow* with `update_snapshots`) so they match the Linux renderer
 
 ### Phase 5 – Alerts & operations ✅ (container items: *CI only*)
@@ -105,7 +106,7 @@ Open-Meteo returns `null` for past hours older than ~2 months (dropped, document
 | Fresh clone → `make check` green | ✅ verified on Windows via `tasks.py check`; Linux via CI on first push |
 | `docker compose up` → demo dashboard < 2 min | ☐ not verifiable here (no Docker); compose file + demo mode are in place |
 | Live data from SMARD and Energy-Charts, auto refresh | ✅ verified (worker ran against live sources; UI polls every 60 s) |
-| All §7 thresholds enforced in CI | ✅ configured; ◐ mutation score, Lighthouse, visual baselines get their first run in CI |
+| All §7 thresholds enforced in CI | ✅ configured; ◐ mutation score and visual baselines get their first run in CI (Lighthouse verified locally) |
 | Every number has unit, data timestamp and source | ✅ (tile footers; E2E asserts it) |
 | No secrets in the repo (gitleaks, full history) | ✅ |
 | Disclaimer and data licences in README, UI footer, NOTICE | ✅ |
