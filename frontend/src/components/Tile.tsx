@@ -93,7 +93,9 @@ export function Tile({
   return (
     <Card
       aria-labelledby={headingId}
-      className={cn(provenance?.stale ? "opacity-80 grayscale" : undefined, className)}
+      // Stale data is marked by a dashed warning border plus the "Veraltet" badge.
+      // Dimming the tile (opacity) broke WCAG contrast in the light theme.
+      className={cn(provenance?.stale ? "border-dashed border-warn" : undefined, className)}
     >
       <CardHeader>
         <CardTitle id={headingId}>{title}</CardTitle>

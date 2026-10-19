@@ -70,6 +70,10 @@ describe("Tile", () => {
     expect(screen.getByText(/Quelle: smard/)).toBeInTheDocument();
     expect(screen.getByText(/Lizenz: CC BY 4.0/)).toBeInTheDocument();
     expect(screen.getByText(/Veraltet/)).toBeInTheDocument();
+    // Stale tiles must not be dimmed (WCAG contrast in the light theme).
+    const tile = screen.getByRole("region", { name: "T" });
+    expect(tile.className).toContain("border-dashed");
+    expect(tile.className).not.toMatch(/opacity|grayscale/);
   });
 
   it("helpers derive provenance and licences", () => {
