@@ -66,12 +66,12 @@ Open-Meteo returns `null` for past hours older than ~2 months (dropped, document
 - [x] Pagination, filters, rate limit, optional hashed API keys, configurable CORS
 - [x] OpenAPI generated and drift-checked in `make build`; Schemathesis green; examples in `docs/api.md`
 
-### Phase 4 – Frontend ✅ (visual baselines: *CI only*)
+### Phase 4 – Frontend ✅
 - [x] Pages Lage, Ausblick, Ereignisse, Historie, Status, Kiosk; component library; theme; DE/EN
 - [x] Typed API client generated from OpenAPI (`openapi-typescript` + `openapi-fetch`)
 - [x] Vitest coverage ≥ 80 % (96.5 %); axe 0 serious/critical (verified, dark + light)
 - [x] Lighthouse ≥ 90/95/95 – verified locally 2026-10-19 (desktop preset, 3 runs each, production build, live data): `/de`, `/de/outlook`, `/de/countries`, `/de/kiosk` all ≥ 0.98 / 1.00 / 1.00. The first run failed on `/de` (0.78) and `/de/outlook` (0.85) because of layout shift (CLS 0.57 / 0.29); tiles now reserve their final height while loading (CLS ≤ 0.06). The populated country view (needs ENTSO-E token) was not measured
-- [ ] Visual regression baselines – tests written (masked dynamic values, 0.2 %); baselines must be generated once in CI (`e2e.yml` → *Run workflow* with `update_snapshots`) so they match the Linux renderer
+- [x] Visual regression baselines – generated in CI on the Linux renderer (`e2e.yml` with `update_snapshots`, Chromium/Firefox/WebKit, dark/light/kiosk), reviewed and committed; dynamic values incl. the flow map are masked, threshold 0.2 %
 
 ### Phase 5 – Alerts & operations ✅ (container items: *CI only*)
 - [x] Webhook, Slack/Teams and SMTP channels, debouncing + episodes, UI test button (server-side admin token)
@@ -96,24 +96,25 @@ Open-Meteo returns `null` for past hours older than ~2 months (dropped, document
 ### Phase 8 – Release readiness ◐
 - [x] README with Playwright screenshots, badges, quick start; release-please, multi-arch + cosign + SBOM workflow, Scorecard
 - [x] Final audit (this document)
-- [ ] Tag `v1.0.0` / GHCR release – requires the GitHub repository (no remote configured here)
-- [ ] Fresh clone + `docker compose up` in an empty environment – requires Docker
+- [x] Public repository [NOGtechnologia/gridpulse](https://github.com/NOGtechnologia/gridpulse) (2026-10-19); ci, docker (Trivy + Hadolint), codeql, scorecard and e2e green on GitHub Actions
+- [ ] Tag `v1.0.0` / GHCR release – release-please needs "Allow GitHub Actions to create and approve pull requests" in the repository settings (the first run failed on exactly that)
+- [x] Fresh clone + `docker compose up` in an empty environment – done by `e2e.yml` on a fresh GitHub runner (compose stack in demo mode, healthy, then Playwright on 3 browsers)
 
 ## Acceptance criteria (§13)
 
 | Criterion | Status |
 |---|---|
-| Fresh clone → `make check` green | ✅ verified on Windows via `tasks.py check`; Linux via CI on first push |
-| `docker compose up` → demo dashboard < 2 min | ☐ not verifiable here (no Docker); compose file + demo mode are in place |
+| Fresh clone → `make check` green | ✅ verified on Windows via `tasks.py check` and on Linux in GitHub Actions (`ci.yml`) |
+| `docker compose up` → demo dashboard < 2 min | ✅ in `e2e.yml` on a fresh runner (images built, stack healthy, E2E against it) |
 | Live data from SMARD and Energy-Charts, auto refresh | ✅ verified (worker ran against live sources; UI polls every 60 s) |
-| All §7 thresholds enforced in CI | ✅ configured; ◐ mutation score and visual baselines get their first run in CI (Lighthouse verified locally) |
+| All §7 thresholds enforced in CI | ✅ running on GitHub Actions; ◐ mutation score: first nightly run pending |
 | Every number has unit, data timestamp and source | ✅ (tile footers; E2E asserts it) |
 | No secrets in the repo (gitleaks, full history) | ✅ |
 | Disclaimer and data licences in README, UI footer, NOTICE | ✅ |
 
 ## Open points
 
-1. Push to GitHub, enable branch protection, run all workflows once; generate visual baselines via `e2e.yml` (`update_snapshots`).
+1. Repository settings (owner only): allow GitHub Actions to create pull requests (release-please), enable branch protection as described in CONTRIBUTING.md. Pushed, all workflows ran, visual baselines committed. The first Linux run found and fixed: Trivy (bookworm `perl-base`, npm in the web image), Hadolint DL3066, an E2E race on the country page.
 2. Configure `GRIDPULSE_ENTSOE_TOKEN` (repo secret + `.env`), re-record ENTSO-E fixtures and check the populated country comparison against live data.
 3. First nightly mutation run – raise tests if the score is < 80 % (now includes `domain/calendar.py` and `domain/scores.py`).
 4. Forecasting model: improve features (capacity-weighted weather points, longer history, archived day-ahead weather for an honest backtest) – see [forecasting.md](forecasting.md).
