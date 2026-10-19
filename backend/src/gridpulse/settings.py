@@ -10,6 +10,7 @@ from pydantic import Field, SecretStr, field_validator
 from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 from gridpulse.domain.rules.config import RuleConfig
+from gridpulse.forecasting.config import ModelConfig
 from gridpulse.validation.plausibility import PlausibilityConfig
 
 
@@ -68,6 +69,13 @@ class Settings(BaseSettings):
     price_min_eur_mwh: float = -500.0
     price_max_eur_mwh: float = 4000.0
 
+    # --- own forecasting model (phase 7, optional; ADR 0010) ---------------------------
+    forecast_model_enabled: bool = True
+    forecast_model_history_days: int = Field(default=90, ge=2)
+    forecast_model_test_days: int = Field(default=7, ge=1)
+    forecast_model_min_train_days: int = Field(default=14, ge=1)
+    forecast_model_interval_hours: int = Field(default=24, ge=1)
+
     # --- alerts -------------------------------------------------------------------
     alert_debounce_minutes: int = Field(default=60, ge=0)
     alert_min_severity: str = "warning"
@@ -100,6 +108,14 @@ class Settings(BaseSettings):
             dunkelflaute_min_duration=timedelta(hours=self.dunkelflaute_min_hours),
             crosscheck_tolerance=self.crosscheck_tolerance,
             stat_threshold=self.stat_threshold,
+        )
+
+    def forecast_model_config(self) -> ModelConfig:
+        return ModelConfig(
+            history=timedelta(days=self.forecast_model_history_days),
+            test_days=self.forecast_model_test_days,
+            min_train_days=self.forecast_model_min_train_days,
+            horizon=timedelta(hours=self.forecast_horizon_hours),
         )
 
     def plausibility_config(self) -> PlausibilityConfig:

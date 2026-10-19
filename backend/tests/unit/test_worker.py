@@ -81,6 +81,7 @@ async def test_scheduler_jobs_and_safe_wrapper() -> None:
         "ingest:open_meteo",
         "ingest:frequency",
         "analysis",
+        "forecast_model",
     }
 
     async def boom() -> None:

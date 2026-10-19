@@ -16,6 +16,10 @@ LICENSES: dict[str, tuple[str, str]] = {
     "open_meteo": (OpenMeteoAdapter.license, OpenMeteoAdapter.attribution),
     "entsoe": (EntsoeAdapter.license, EntsoeAdapter.attribution),
     "gridpulse": ("CC BY 4.0 (derived)", "GridPulse calculation from the cited sources"),
+    "gridpulse_model": (
+        "CC BY 4.0 (derived)",
+        "GridPulse forecasting model trained on Open-Meteo weather and SMARD data",
+    ),
     "demo": ("CC0 1.0", "GridPulse synthetic demo data"),
 }
 

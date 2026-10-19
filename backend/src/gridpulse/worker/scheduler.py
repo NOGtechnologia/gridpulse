@@ -20,8 +20,9 @@ from gridpulse.domain.metrics import Kind
 from gridpulse.domain.rules.model import Event
 from gridpulse.observability import EVENTS_CREATED, get_logger
 from gridpulse.services.analysis import derive_indicators, evaluate_rules
+from gridpulse.services.model_forecast import run_model
 from gridpulse.settings import Settings
-from gridpulse.storage.repository import Repository
+from gridpulse.storage.repository import ModelRun, Repository
 from gridpulse.worker.pipeline import (
     Clock,
     IngestJob,
@@ -83,6 +84,10 @@ class Worker:
         _, events = await self.ingestor.run_source("energy_charts_frequency", self.frequency)
         return events
 
+    async def train_model(self) -> ModelRun | None:
+        run, _ = await run_model(self.repo, self.clock(), self.settings.forecast_model_config())
+        return run
+
     async def analyse(self) -> list[Event]:
         now = self.clock()
         await derive_indicators(self.repo, now)
@@ -140,4 +145,13 @@ def build_scheduler(worker: Worker) -> AsyncIOScheduler:
         next_run_time=first + timedelta(seconds=60),
         id="analysis",
     )
+    if s.forecast_model_enabled:
+        # Daily retraining; the first run waits until the initial ingest has finished.
+        scheduler.add_job(
+            _safe("forecast_model", worker.train_model),
+            "interval",
+            hours=s.forecast_model_interval_hours,
+            next_run_time=first + timedelta(minutes=3),
+            id="forecast_model",
+        )
     return scheduler
