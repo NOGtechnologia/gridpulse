@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.7
 # GridPulse web (Next.js standalone). Hardened: non-root, read-only root FS compatible.
 
-FROM node:22.23.3-trixie-slim AS build
+FROM node:26.12.1-trixie-slim AS build
 ENV NEXT_TELEMETRY_DISABLED=1 COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 WORKDIR /app
 RUN corepack enable
@@ -10,7 +10,7 @@ RUN pnpm install --frozen-lockfile
 COPY . .
 RUN pnpm run build
 
-FROM node:22.23.3-trixie-slim AS runtime
+FROM node:26.12.1-trixie-slim AS runtime
 LABEL org.opencontainers.image.title="gridpulse-web" \
       org.opencontainers.image.licenses="Apache-2.0" \
       org.opencontainers.image.source="https://github.com/NOGtechnologia/gridpulse"
