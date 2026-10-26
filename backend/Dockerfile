@@ -4,7 +4,7 @@
 
 FROM ghcr.io/astral-sh/uv:0.13.1 AS uv
 
-FROM python:3.12.15-slim-trixie AS build
+FROM python:3.15.0-slim-trixie AS build
 COPY --from=uv /uv /usr/local/bin/uv
 ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy UV_PYTHON_DOWNLOADS=never
 WORKDIR /app
@@ -14,7 +14,7 @@ COPY src ./src
 COPY alembic.ini ./
 RUN uv sync --frozen --no-dev
 
-FROM python:3.12.15-slim-trixie AS runtime
+FROM python:3.15.0-slim-trixie AS runtime
 LABEL org.opencontainers.image.title="gridpulse-backend" \
       org.opencontainers.image.description="GridPulse API and worker" \
       org.opencontainers.image.licenses="Apache-2.0" \
