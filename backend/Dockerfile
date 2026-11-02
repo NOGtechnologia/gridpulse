@@ -2,7 +2,7 @@
 # GridPulse backend image (api + worker). Hardened: non-root, read-only root FS
 # compatible, no build tools in the runtime stage.
 
-FROM ghcr.io/astral-sh/uv:0.13.1 AS uv
+FROM ghcr.io/astral-sh/uv:0.13.6 AS uv
 
 FROM python:3.12.15-slim-trixie AS build
 COPY --from=uv /uv /usr/local/bin/uv
